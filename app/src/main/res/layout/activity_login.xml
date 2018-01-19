@@ -1,15 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context="com.brandonlee.instagram.LoginActivity">
 
 
-    <EditText
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Username"/>
+        android:layout_weight="1">
 
-</RelativeLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:orientation="vertical"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp">
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Email"
+                android:id="@+id/etEmail"
+                android:inputType="textEmailAddress"/>
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Password"
+                android:id="@+id/etPassword"
+                android:inputType="textPassword" />
+            
+            <Button
+                android:id="@+id/btnLogin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_margin="7dp"
+                android:text="Login"
+                android:textAllCaps="false" />
+
+            <TextView
+                android:id="@+id/tvSignUp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:onClick="onClick"
+                android:padding="15dp"
+                android:text="Don't have an account? Sign up!"
+                android:textAlignment="center"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium" />
+
+
+        </LinearLayout>
+
+
+    </RelativeLayout>
+</LinearLayout>

@@ -1,7 +1,7 @@
 package com.brandonlee.instagram;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -10,10 +10,8 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        test();
+
     }
-    public void test() {
-        return;
-    }
+
 
 }
