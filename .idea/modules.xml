@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/GG_corp.iml" filepath="$PROJECT_DIR$/GG_corp.iml" />
       <module fileurl="file://$PROJECT_DIR$/Instagram.iml" filepath="$PROJECT_DIR$/Instagram.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
