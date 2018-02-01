@@ -4,4 +4,12 @@
     <string name="profile_post_num">posts</string>
     <string name="profile_followers_num">followers</string>
     <string name="profile_following_num">following</string>
+
+    <string-array name="theme_names">
+
+        <item>Choose A Theme...</item>
+        <item>Pets</item>
+        <item>Food</item>
+        <item>Sport</item>
+    </string-array>
 </resources>
