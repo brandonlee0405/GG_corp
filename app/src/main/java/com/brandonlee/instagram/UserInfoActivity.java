@@ -1,5 +1,6 @@
 package com.brandonlee.instagram;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
@@ -59,6 +60,7 @@ public class UserInfoActivity extends AppCompatActivity {
             databaseUsers.child(id).setValue(user);
 
             Toast.makeText(this, "User added!", Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(UserInfoActivity.this, MainActivity.class));
         }
         else {
             Toast.makeText(this, "You should enter a username", Toast.LENGTH_LONG).show();
