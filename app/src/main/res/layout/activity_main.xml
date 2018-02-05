@@ -11,11 +11,21 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <!-- Middle section (body) -->
+        <!-- Top section (Fragment) -->
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/relLayout1">
+
+            <include layout="@layout/layout_top_tab"/>
+
+        </RelativeLayout>
+
+        <!-- Middle section (body) -->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/relLayout2">
 
             <include layout="@layout/layout_center_viewpager"/>
         </RelativeLayout>
