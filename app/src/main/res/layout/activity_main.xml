@@ -14,8 +14,8 @@
         <!-- Top section (Fragment) -->
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/relLayout1">
+            android:layout_height="50dp"
+            android:id="@+id/relLayoutTopBar">
 
             <include layout="@layout/layout_top_tab"/>
 
@@ -25,7 +25,9 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/relLayout2">
+            android:id="@+id/container"
+            android:layout_below="@id/relLayoutTopBar"
+            android:layout_above="@id/relLayoutBotBar">
 
             <include layout="@layout/layout_center_viewpager"/>
         </RelativeLayout>
@@ -33,7 +35,15 @@
 
 
         <!-- Bottom navbar -->
-        <include layout="@layout/layout_bottom_navbar"/>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_alignParentBottom="true"
+            android:id="@+id/relLayoutBotBar">
+
+            <include layout="@layout/layout_bottom_navbar"/>
+
+        </RelativeLayout>
 
     </RelativeLayout>
 
