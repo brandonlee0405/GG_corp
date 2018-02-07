@@ -4,13 +4,25 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
+    <Button
+        android:id="@+id/searchButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:textSize="25sp"
-        android:text="Search Fragment"
-        android:layout_marginTop="40dp"
-        android:id="@+id/tvFragment2"/>
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="21dp"
+        android:layout_marginTop="23dp"
+        android:layout_toEndOf="@+id/editText"
+        android:text="Search" />
+
+    <EditText
+        android:id="@+id/editText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/searchButton"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="31dp"
+        android:ems="10"
+        android:hint="Username"
+        android:inputType="textPersonName" />
 
 </RelativeLayout>
