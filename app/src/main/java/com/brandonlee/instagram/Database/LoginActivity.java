@@ -1,4 +1,4 @@
-package com.brandonlee.instagram;
+package com.brandonlee.instagram.Database;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,6 +10,8 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.brandonlee.instagram.MainActivity;
+import com.brandonlee.instagram.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;

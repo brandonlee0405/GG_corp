@@ -1,4 +1,4 @@
-package com.brandonlee.instagram;
+package com.brandonlee.instagram.Database;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,6 +11,8 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.brandonlee.instagram.MainActivity;
+import com.brandonlee.instagram.R;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 

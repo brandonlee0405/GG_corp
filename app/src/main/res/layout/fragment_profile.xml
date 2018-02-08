@@ -13,4 +13,13 @@
         android:layout_marginTop="40dp"
         android:id="@+id/tvFragment4"/>
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="LogOut"
+        android:layout_below="@+id/tvFragment4"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="40dp"
+        android:id="@+id/btnLogout" />
+
 </RelativeLayout>

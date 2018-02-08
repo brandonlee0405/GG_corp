@@ -1,4 +1,4 @@
-package com.brandonlee.instagram;
+package com.brandonlee.instagram.Database;
 
 /**
  * Created by adria on 2/1/2018.
