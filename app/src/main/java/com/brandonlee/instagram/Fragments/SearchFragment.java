@@ -10,10 +10,8 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.brandonlee.instagram.MainActivity;
 import com.brandonlee.instagram.ProfileActivity;
 import com.brandonlee.instagram.R;
-import com.brandonlee.instagram.SearchActivity;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
