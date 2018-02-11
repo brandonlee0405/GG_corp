@@ -2,27 +2,22 @@ package com.brandonlee.instagram;
 
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.media.ExifInterface;
 import android.media.MediaScannerConnection;
-import android.media.ThumbnailUtils;
 import android.net.Uri;
-import android.os.Build;
+import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -61,18 +56,27 @@ public class CameraActivity extends AppCompatActivity {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            /*
             File photoFile = null;
+
             try {
                 photoFile = createImageFile();
             } catch (IOException e) {
                 e.printStackTrace();
             }
+
             if (photoFile != null) {
                 String authorities = getApplicationContext().getPackageName() + ".fileprovider";
                 Uri photoURI = FileProvider.getUriForFile(CameraActivity.this, authorities, createImageFile());
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
                 startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
             }
+            */
+
+            String authorities = getApplicationContext().getPackageName() + ".fileprovider";
+            Uri photoURI = FileProvider.getUriForFile(CameraActivity.this, authorities, createImageFile());
+            takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
 
         }
 
@@ -81,7 +85,10 @@ public class CameraActivity extends AppCompatActivity {
     private File createImageFile() throws IOException {
         String timestamp = new SimpleDateFormat("yyMMdd_HHmmss").format(new Date());
         String imageFileName = "JPEG_" + timestamp + "_";
-        File storageDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM), "Camera");
+        File storageDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM), "GG_Corps");
+        if (!storageDir.exists())
+            storageDir.mkdir();
+        //File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         File image = File.createTempFile(imageFileName, ".jpg", storageDir);
         /*
         File image = File.createTempFile(
@@ -104,6 +111,7 @@ public class CameraActivity extends AppCompatActivity {
             //setReducedImageSize();
             Uri imageUri = Uri.parse(mCurrentPhotoPath);
             File file = new File(imageUri.getPath());
+            Toast.makeText(this, file.toString(), Toast.LENGTH_LONG).show();
             try {
                 InputStream ims = new FileInputStream(file);
                 //imageView.setImageBitmap(BitmapFactory.decodeStream(ims));
