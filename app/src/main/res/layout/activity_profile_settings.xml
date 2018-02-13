@@ -8,13 +8,13 @@
 
 
     <LinearLayout
+        android:id="@+id/profilePic"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:orientation="vertical"
         android:paddingLeft="15dp"
-        android:paddingRight="15dp"
-        android:id="@+id/profilePic">
+        android:paddingRight="15dp">
 
         <ImageView
             android:layout_width="104dp"
@@ -36,37 +36,37 @@
             android:layout_width="match_parent"
             android:layout_height="37dp"
             android:text="General"
-            android:textSize="20sp"/>
+            android:textSize="20sp" />
 
     </LinearLayout>
 
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp">
 
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="29dp"
             android:layout_weight="0"
-            android:text="Display Name"
-            />
+            android:text="Display Name" />
 
         <EditText
+            android:id="@+id/etFullName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:ems="10"
             android:inputType="textPersonName"
-            android:text="Name...."
-            android:id="@+id/etFullName"
-            />
+            android:text="Name...." />
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp">
 
 
         <TextView
@@ -76,19 +76,20 @@
             android:text="Username" />
 
         <EditText
+            android:id="@+id/etUsername"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:ems="10"
             android:inputType="text"
-            android:text="Username..."
-            android:id="@+id/etUsername"/>
+            android:text="Username..." />
         />
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp">
 
 
         <TextView
@@ -99,13 +100,13 @@
             android:text="Bio" />
 
         <EditText
+            android:id="@+id/userBio"
             android:layout_width="287dp"
             android:layout_height="75dp"
             android:layout_weight="0"
             android:ems="10"
             android:inputType="textMultiLine"
-            android:text="your bio"
-            android:id="@+id/userBio"/>
+            android:text="your bio" />
 
     </LinearLayout>
 
@@ -121,12 +122,13 @@
             android:layout_width="match_parent"
             android:layout_height="34dp"
             android:text="Privacy"
-            android:textSize="20sp"/>
+            android:textSize="20sp" />
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp">
 
 
         <TextView
@@ -136,19 +138,19 @@
             android:text="Email" />
 
         <EditText
+            android:id="@+id/etEmail"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:ems="10"
             android:inputType="text"
-            android:text="Email..."
-            android:id="@+id/etEmail"
-            />
+            android:text="Email..." />
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp">
 
 
         <TextView
@@ -172,6 +174,27 @@
         android:layout_width="match_parent"
         android:layout_height="42dp"
         android:text="Photos are private"
-        android:textSize="15sp"/>
+        android:textSize="15sp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="2">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"/>
+
+        <Button
+            android:id="@+id/btnSignOut"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Sign Out"
+            android:layout_weight="0"
+            android:textAllCaps="false"
+            android:layout_gravity="center"/>
+    </LinearLayout>
 
 </LinearLayout>

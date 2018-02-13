@@ -36,13 +36,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         mAuth = FirebaseAuth.getInstance();
 
-        onStart();
-
         findViewById(R.id.tvSignUp).setOnClickListener(this);
         findViewById(R.id.btnLogin).setOnClickListener(this);
     }
 
-    public void onStart() {
+    @Override
+    protected void onStart() {
         super.onStart();
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if (currentUser != null) {
