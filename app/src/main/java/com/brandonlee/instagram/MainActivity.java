@@ -1,6 +1,7 @@
 package com.brandonlee.instagram;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -10,6 +11,7 @@ import android.util.Log;
 import android.view.MenuItem;
 
 import com.brandonlee.instagram.Fragments.AlertFragment;
+import com.brandonlee.instagram.Fragments.CameraFragment;
 import com.brandonlee.instagram.Fragments.HomeFragment;
 import com.brandonlee.instagram.Fragments.ProfileFragment;
 import com.brandonlee.instagram.Fragments.SearchFragment;
@@ -35,6 +37,9 @@ public class MainActivity extends AppCompatActivity {
                     return true;
                 case R.id.ic_search:
                     goSearch();
+                    return true;
+                case R.id.ic_circle:
+                    goCamera();
                     return true;
                 case R.id.ic_alert:
                     goAlert();
@@ -75,7 +80,16 @@ public class MainActivity extends AppCompatActivity {
         ft.commit();
     }
 
+    private void goCamera() {
+        CameraFragment fragment = new CameraFragment();
+        android.support.v4.app.FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.replace(R.id.container,fragment);
+        ft.commit();
+    }
 
+    public void goToProfile() {
+        goProfile();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,6 +113,7 @@ public class MainActivity extends AppCompatActivity {
 
         adapter.addFragment(new HomeFragment());
         adapter.addFragment(new SearchFragment());
+        adapter.addFragment(new CameraFragment());
         adapter.addFragment(new AlertFragment());
         adapter.addFragment(new ProfileFragment());
 
