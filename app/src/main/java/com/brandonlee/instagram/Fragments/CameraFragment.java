@@ -1,6 +1,5 @@
 package com.brandonlee.instagram.Fragments;
 
-import android.support.v4.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -12,18 +11,23 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v4.content.FileProvider;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.brandonlee.instagram.CameraActivity;
 import com.brandonlee.instagram.R;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -43,6 +47,8 @@ public class CameraFragment extends Fragment {
     static final int REQUEST_IMAGE_CAPTURE = 1;
     ImageView imageView;
     String mCurrentPhotoPath;
+    String mCurrentPhotoName;
+    private StorageReference mStorageRef = FirebaseStorage.getInstance().getReference();
 
     @Nullable
     @Override
@@ -111,6 +117,7 @@ public class CameraFragment extends Fragment {
                 storageDir
         );
         */
+        mCurrentPhotoName = imageFileName;
         mCurrentPhotoPath = image.getAbsolutePath();
         return image;
     }
@@ -145,7 +152,25 @@ public class CameraFragment extends Fragment {
 
                         }
                     });
+            upLoadPicture(file, mCurrentPhotoName);
         }
+    }
+
+    private void upLoadPicture(File filePath,  String imageName) {
+        Uri file = Uri.fromFile(filePath);
+        StorageReference picRef = mStorageRef.child(imageName);
+
+        picRef.putFile(file).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                Uri downloadUrl = taskSnapshot.getDownloadUrl();
+            }
+        }) .addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+
+            }
+        });
     }
 
     private static Bitmap rotateImageIfRequired(Context context, Bitmap img, Uri selectedImage) throws IOException {
