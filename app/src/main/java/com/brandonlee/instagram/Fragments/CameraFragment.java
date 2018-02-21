@@ -25,6 +25,8 @@ import android.widget.Toast;
 import com.brandonlee.instagram.R;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -49,6 +51,7 @@ public class CameraFragment extends Fragment {
     String mCurrentPhotoPath;
     String mCurrentPhotoName;
     private StorageReference mStorageRef = FirebaseStorage.getInstance().getReference();
+    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
     @Nullable
     @Override
@@ -157,8 +160,13 @@ public class CameraFragment extends Fragment {
     }
 
     private void upLoadPicture(File filePath,  String imageName) {
+        // if there is a user, use the account name for the folder.  So the pictures are account bound
+        if (user != null) {
+            Toast.makeText(getActivity(), user.getEmail(), Toast.LENGTH_LONG).show();
+        }
         Uri file = Uri.fromFile(filePath);
-        StorageReference picRef = mStorageRef.child(imageName);
+        String fName = "image/";
+        StorageReference picRef = mStorageRef.child(fName + imageName);
 
         picRef.putFile(file).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
