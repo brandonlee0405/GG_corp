@@ -1,9 +1,10 @@
 <resources>
     <string name="app_name">Instagram</string>
     <string name="edit_profile">Edit Profile</string>
-    <string name="profile_post_num">posts</string>
-    <string name="profile_followers_num">followers</string>
-    <string name="profile_following_num">following</string>
+    <string name="profile_post_num">Posts</string>
+    <string name="profile_followers_num">Followers</string>
+    <string name="profile_following_num">Following</string>
+    <string name="user_name">First Last</string>
 
     <string-array name="theme_names">
 
