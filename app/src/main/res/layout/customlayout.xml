@@ -23,6 +23,7 @@
         android:layout_marginTop="24dp"
         android:layout_toEndOf="@+id/imageView_profilepic"
         android:text="TextView"
+        android:clickable="true"
         android:textAppearance="@style/TextAppearance.AppCompat.Title"
         android:textSize="14sp" />
 

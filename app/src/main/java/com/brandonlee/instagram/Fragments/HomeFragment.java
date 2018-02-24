@@ -1,5 +1,6 @@
 package com.brandonlee.instagram.Fragments;
 
+import android.content.Intent;
 import android.media.Image;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -12,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.brandonlee.instagram.ProfileActivity;
 import com.brandonlee.instagram.R;
 
 import org.w3c.dom.Text;
@@ -37,6 +39,7 @@ public class HomeFragment extends Fragment {
 
         CustomAdapter customAdapter = new CustomAdapter();
         listView.setAdapter(customAdapter);
+
         return view;
     }
 
@@ -68,7 +71,15 @@ public class HomeFragment extends Fragment {
             name.setText(NAMES[i]);
             photo.setImageResource(PHOTOS[i]);
 
+            name.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startActivity(new Intent(getActivity(), ProfileActivity.class));
+                }
+            });
+
             return view;
         }
     }
+
 }
