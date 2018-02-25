@@ -9,6 +9,7 @@
 
 
     <application
+        android:name=".Instagram"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -26,7 +27,7 @@
                 android:resource="@xml/file_paths"></meta-data>
         </provider>
 
-        <activity android:name=".Database.LoginActivity">
+        <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -37,7 +38,7 @@
         <activity android:name=".Database.UserInfoActivity" />
         <activity android:name=".ProfileActivity" />
         <activity android:name=".ProfileSettings" />
-        <activity android:name=".MainActivity" />
+        <activity android:name=".Database.LoginActivity" />
         <activity android:name=".CameraActivity" />
 
 
