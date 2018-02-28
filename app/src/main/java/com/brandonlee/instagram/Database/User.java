@@ -5,37 +5,51 @@ package com.brandonlee.instagram.Database;
  */
 
 public class User {
-    String userID;
+
+    String email;
+    String user_id;
     String username;
-    String fullname;
-    String theme;
+
+    public User(String email, String user_id, String username) {
+        this.email = email;
+        this.user_id = user_id;
+        this.username = username;
+    }
 
     public User(){
 
     }
 
-    public User(String userID, String username, String fullname, String theme) {
-        this.userID = userID;
-        this.username = username;
-        this.fullname = fullname;
-        this.theme = theme;
+    public String getEmail() {
+        return email;
     }
 
-    public String getUserID() {
-        return userID;
+    public String getUser_id() {
+        return user_id;
     }
 
     public String getUsername() {
         return username;
     }
 
-    public String getFullname() {
-        return fullname;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
-    public String getTheme() {
-        return theme;
+    public void setUser_id(String user_id) {
+        this.user_id = user_id;
     }
 
+    public void setUsername(String username) {
+        this.username = username;
+    }
 
+    @Override
+    public String toString() {
+        return "User{" +
+                "email='" + email + '\'' +
+                ", userID='" + user_id + '\'' +
+                ", username='" + username + '\'' +
+                '}';
+    }
 }

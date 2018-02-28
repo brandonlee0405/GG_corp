@@ -57,7 +57,7 @@ public class UserInfoActivity extends AppCompatActivity {
         if(!TextUtils.isEmpty(username)) {
             String id = databaseUsers.push().getKey();
 
-            User user = new User(id, username, fullname, theme);
+            User user = new User(id, username, fullname);
 
             databaseUsers.child(id).setValue(user);
 
