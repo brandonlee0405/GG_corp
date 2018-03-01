@@ -3,25 +3,45 @@ package com.brandonlee.instagram.Fragments;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.ImageView;
+import android.widget.TextView;
 
+import com.brandonlee.instagram.Database.User;
+import com.brandonlee.instagram.Database.UserAccountSettings;
+import com.brandonlee.instagram.Database.UserSettings;
 import com.brandonlee.instagram.ProfileSettings;
 import com.brandonlee.instagram.R;
-import com.squareup.picasso.Picasso;
+import com.brandonlee.instagram.Utils.FirebaseMethods;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 /**
  * Created by BrandonLee on 2/6/18.
  */
 
-public class ProfileFragment extends Fragment {
+public class ProfileFragment extends Fragment implements View.OnClickListener {
+
     private static final String TAG = "ProfileFragment";
+
+    // Firebase
+    private FirebaseAuth mAuth;
+    private FirebaseAuth.AuthStateListener mAuthListener;
+    private FirebaseDatabase mFirebaseDatabase;
+    private DatabaseReference myRef;
+    private FirebaseMethods mFirebaseMethods;
+
+    private TextView mFullname;
 
     Activity context;
 
@@ -31,23 +51,104 @@ public class ProfileFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
         context = getActivity();
+
+        mFirebaseMethods = new FirebaseMethods(getActivity());
+
+
+        mFullname = (TextView)view.findViewById(R.id.textView5);
+
+        view.findViewById(R.id.btnEditProfile).setOnClickListener(this);
+
+        setupFirebaseAuth();
+
+
         return view;
     }
+
+    private void setProfileWidgets(UserSettings userSettings) {
+        Log.d(TAG, "setProfileWidgets: setting widgets with data from firebase");
+
+        User user = userSettings.getUser();
+        UserAccountSettings settings = userSettings.getSettings();
+
+        // Got to do the profile photo
+        mFullname.setText(settings.getDisplay_name());
+    }
+
+
+
+    /*
+    ------------------------------------ Firebase ---------------------------------------------
+     */
+
+    /**
+     * Setup the firebase auth object
+     */
+    private void setupFirebaseAuth(){
+        Log.d(TAG, "setupFirebaseAuth: setting up firebase auth.");
+
+        mAuth = FirebaseAuth.getInstance();
+        mFirebaseDatabase = FirebaseDatabase.getInstance();
+        myRef = mFirebaseDatabase.getReference();
+
+        mAuthListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                FirebaseUser user = firebaseAuth.getCurrentUser();
+
+                if (user != null) {
+                    // User is signed in
+                    Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
+
+
+                } else {
+                    // User is signed out
+                    Log.d(TAG, "onAuthStateChanged:signed_out");
+                }
+                // ...
+            }
+        };
+
+        myRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                Log.d(TAG, "onDataChange: Retrieve user info from database");
+                // retrieve user info from the database
+                setProfileWidgets(mFirebaseMethods.getUserSettings(dataSnapshot));
+                // retrieve images from the user
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+
 
     @Override
     public void onStart() {
         super.onStart();
-        Button btnEditProfile = (Button) context.findViewById(R.id.btnEditProfile);
-        ImageView imgButton = (ImageView) context.findViewById(R.id.imageButton);
-        String url = "https://firebasestorage.googleapis.com/v0/b/ggcorp-9ffb1.appspot.com/o/image%2FJPEG_180228_150836_?alt=media&token=eb1dd0ed-62ec-49dd-83b9-1e339904aefb";
-        Picasso.with(getActivity().getApplicationContext()).load(url).into(imgButton);
-        imgButton.setRotation((float) 90.0);
-        btnEditProfile.setOnClickListener(new View.OnClickListener() {            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(context, ProfileSettings.class);
-                Log.d(TAG, "onClick: Test the intent");
-                startActivity(intent);
-            }
-        });
+        mAuth.addAuthStateListener(mAuthListener);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (mAuthListener != null) {
+            mAuth.removeAuthStateListener(mAuthListener);
+        }
+    }
+
+    @Override
+    public void onClick(View v) {
+        if(v.getId() == R.id.btnEditProfile) {
+            Intent intent = new Intent(context, ProfileSettings.class);
+            Log.d(TAG, "onClick: Test the intent");
+            startActivity(intent);
+        }
     }
 }
