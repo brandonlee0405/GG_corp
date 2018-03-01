@@ -15,6 +15,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.FileProvider;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -52,6 +53,7 @@ public class CameraFragment extends Fragment {
     String mCurrentPhotoName;
     private StorageReference mStorageRef = FirebaseStorage.getInstance().getReference();
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+    String mCurrentPhotoLink;
 
     @Nullable
     @Override
@@ -161,17 +163,21 @@ public class CameraFragment extends Fragment {
 
     private void upLoadPicture(File filePath,  String imageName) {
         // if there is a user, use the account name for the folder.  So the pictures are account bound
+        String fName = "image/";
         if (user != null) {
             Toast.makeText(getActivity(), user.getEmail(), Toast.LENGTH_LONG).show();
+            fName = user.getEmail() + "/";
         }
         Uri file = Uri.fromFile(filePath);
-        String fName = "image/";
         StorageReference picRef = mStorageRef.child(fName + imageName);
 
         picRef.putFile(file).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                 Uri downloadUrl = taskSnapshot.getDownloadUrl();
+                //Toast.makeText(getActivity(), downloadUrl.toString(), Toast.LENGTH_LONG).show();
+                Log.d(TAG, "onSuccess: " + downloadUrl.toString());
+                mCurrentPhotoLink = downloadUrl.toString();
             }
         }) .addOnFailureListener(new OnFailureListener() {
             @Override
@@ -180,6 +186,7 @@ public class CameraFragment extends Fragment {
             }
         });
     }
+
 
     private static Bitmap rotateImageIfRequired(Context context, Bitmap img, Uri selectedImage) throws IOException {
 

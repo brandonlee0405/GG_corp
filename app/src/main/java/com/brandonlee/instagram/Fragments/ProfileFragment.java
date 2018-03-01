@@ -10,11 +10,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 
-import com.brandonlee.instagram.Database.LoginActivity;
 import com.brandonlee.instagram.ProfileSettings;
 import com.brandonlee.instagram.R;
-import com.google.firebase.auth.FirebaseAuth;
+import com.squareup.picasso.Picasso;
 
 /**
  * Created by BrandonLee on 2/6/18.
@@ -38,8 +38,11 @@ public class ProfileFragment extends Fragment {
     public void onStart() {
         super.onStart();
         Button btnEditProfile = (Button) context.findViewById(R.id.btnEditProfile);
-        btnEditProfile.setOnClickListener(new View.OnClickListener() {
-            @Override
+        ImageView imgButton = (ImageView) context.findViewById(R.id.imageButton);
+        String url = "https://firebasestorage.googleapis.com/v0/b/ggcorp-9ffb1.appspot.com/o/image%2FJPEG_180228_150836_?alt=media&token=eb1dd0ed-62ec-49dd-83b9-1e339904aefb";
+        Picasso.with(getActivity().getApplicationContext()).load(url).into(imgButton);
+        imgButton.setRotation((float) 90.0);
+        btnEditProfile.setOnClickListener(new View.OnClickListener() {            @Override
             public void onClick(View view) {
                 Intent intent = new Intent(context, ProfileSettings.class);
                 Log.d(TAG, "onClick: Test the intent");
