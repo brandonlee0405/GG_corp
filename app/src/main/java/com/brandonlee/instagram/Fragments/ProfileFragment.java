@@ -42,6 +42,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
     private FirebaseMethods mFirebaseMethods;
 
     private TextView mFullname;
+    private TextView mDescription;
 
     Activity context;
 
@@ -56,6 +57,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
 
 
         mFullname = (TextView)view.findViewById(R.id.textView5);
+        mDescription = (TextView)view.findViewById(R.id.textView6);
 
         view.findViewById(R.id.btnEditProfile).setOnClickListener(this);
 
@@ -73,6 +75,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
 
         // Got to do the profile photo
         mFullname.setText(settings.getDisplay_name());
+        mDescription.setText(settings.getDescription());
     }
 
 
