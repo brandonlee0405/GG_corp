@@ -1,0 +1,110 @@
+<merge xmlns:tools="http://schemas.android.com/tools"
+    xmlns:apps="http://schemas.android.com/apk/res-auto"
+    xmlns:androids="http://schemas.android.com/apk/res/android">
+
+    <RelativeLayout
+        androids:layout_width="match_parent"
+        androids:layout_height="match_parent"
+        androids:background="@color/white">
+
+        <!-- ****** Top section ****** -->
+        <RelativeLayout
+            androids:layout_width="match_parent"
+            androids:layout_height="wrap_content"
+            androids:id="@+id/relLayout1"
+            androids:background="@drawable/white_grey_border_bottom">
+
+            <LinearLayout
+                androids:id="@+id/linLayout1"
+                androids:layout_width="match_parent"
+                androids:layout_height="wrap_content"
+                androids:layout_alignParentStart="true"
+                androids:layout_alignParentTop="true"
+                androids:orientation="horizontal"
+                androids:weightSum="100">
+
+                <RelativeLayout
+                    androids:layout_width="0dp"
+                    androids:layout_height="match_parent"
+                    androids:layout_marginStart="25dp"
+                    androids:layout_weight="25">
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        androids:layout_width="80dp"
+                        androids:layout_height="80dp"
+                        androids:id="@+id/profile_image"
+                        apps:civ_border_color="@android:color/black"
+                        apps:civ_border_width="2dp"
+                        androids:layout_centerVertical="true"/>
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    androids:layout_width="0dp"
+                    androids:layout_height="match_parent"
+                    androids:layout_marginEnd="30dp"
+                    androids:layout_marginStart="30dp"
+                    androids:layout_weight="75">
+
+                    <include layout="@layout/layout_top_profile" />
+
+                </RelativeLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                androids:layout_width="match_parent"
+                androids:layout_height="wrap_content"
+                androids:orientation="vertical"
+                androids:layout_below="@id/linLayout1"
+                androids:id="@+id/linLayout2"
+                androids:padding="20dp">
+
+                <TextView
+                    androids:layout_width="match_parent"
+                    androids:layout_height="wrap_content"
+                    androids:id="@+id/textView5"
+                    androids:textColor="@android:color/black"
+                    androids:textStyle="bold"
+                    androids:text="Brandon Lee"
+                    androids:textSize="16sp"/>
+
+                <TextView
+                    androids:layout_width="match_parent"
+                    androids:layout_height="wrap_content"
+                    androids:id="@+id/textView6"
+                    androids:textColor="@android:color/black"
+                    androids:text="Description"
+                    androids:textSize="16sp"
+                    androids:layout_marginTop="5dp"/>
+
+
+            </LinearLayout>
+            
+            <RelativeLayout
+                androids:layout_width="match_parent"
+                androids:layout_height="wrap_content"
+                androids:id="@+id/relLayout2"
+                androids:layout_below="@+id/linLayout2"
+                androids:layout_marginBottom="50dp">
+
+                <GridView
+                    androids:layout_width="match_parent"
+                    androids:layout_height="wrap_content"
+                    androids:id="@+id/gridView"
+                    androids:numColumns="3"
+                    androids:verticalSpacing="1dp"
+                    androids:horizontalSpacing="1dp"
+                    androids:stretchMode="columnWidth"
+                    androids:gravity="center">
+
+                </GridView>
+
+            </RelativeLayout>
+
+        </RelativeLayout>
+
+
+
+    </RelativeLayout>
+</merge>

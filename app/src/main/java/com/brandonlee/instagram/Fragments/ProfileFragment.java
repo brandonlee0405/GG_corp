@@ -43,6 +43,9 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
 
     private TextView mFullname;
     private TextView mDescription;
+    private TextView mPosts;
+    private TextView mFollowers;
+    private TextView mFollowing;
 
     Activity context;
 
@@ -58,6 +61,9 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
 
         mFullname = (TextView)view.findViewById(R.id.textView5);
         mDescription = (TextView)view.findViewById(R.id.textView6);
+        mPosts = (TextView)view.findViewById(R.id.profile_post);
+        mFollowers = (TextView)view.findViewById(R.id.profile_followers);
+        mFollowing = (TextView)view.findViewById(R.id.profile_following);
 
         view.findViewById(R.id.btnEditProfile).setOnClickListener(this);
 
@@ -76,6 +82,10 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         // Got to do the profile photo
         mFullname.setText(settings.getDisplay_name());
         mDescription.setText(settings.getDescription());
+        mPosts.setText(String.valueOf(settings.getPosts()));
+        mFollowing.setText(String.valueOf(settings.getFollowing()));
+        mFollowers.setText(String.valueOf(settings.getFollowers()));
+
     }
 
 
