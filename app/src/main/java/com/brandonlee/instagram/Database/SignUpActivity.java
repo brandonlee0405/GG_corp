@@ -6,21 +6,16 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
-import com.brandonlee.instagram.MainActivity;
 import com.brandonlee.instagram.R;
 import com.brandonlee.instagram.Utils.FirebaseMethods;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -33,6 +28,7 @@ public class SignUpActivity extends AppCompatActivity {
     private static final String TAG = "SignUpActivity";
     EditText etEmail, etName, etPassword;
     Button btnSignUp;
+    TextView tvLogin;
     private String email, username, password;
     private Context mContext;
     ProgressBar progressBar;
@@ -59,6 +55,7 @@ public class SignUpActivity extends AppCompatActivity {
         etPassword = (EditText) findViewById(R.id.etPassword);
         etName = (EditText) findViewById(R.id.etName);
         btnSignUp = (Button) findViewById(R.id.btnSignUp);
+        tvLogin = (TextView) findViewById(R.id.tvLogin);
         progressBar = (ProgressBar) findViewById(R.id.progressbar);
 
         setupFirebaseAuth();
@@ -78,8 +75,15 @@ public class SignUpActivity extends AppCompatActivity {
                 if(checkInputs(email, username, password)) {
                     progressBar.setVisibility(View.VISIBLE);
 
-                    firebaseMethods.registerNewEmail(email, username, password);
+                    firebaseMethods.registerNewEmail(email, password, username);
                 }
+            }
+        });
+
+        tvLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(SignUpActivity.this, LoginActivity.class));
             }
         });
     }
@@ -130,6 +134,8 @@ public class SignUpActivity extends AppCompatActivity {
                             firebaseMethods.addNewUser(email, username, username, "");
                             Toast.makeText(mContext, "Signup successful.", Toast.LENGTH_SHORT).show();
 
+                            mAuth.signOut();
+
                         }
 
                         @Override
@@ -137,6 +143,9 @@ public class SignUpActivity extends AppCompatActivity {
 
                         }
                     });
+
+                    finish();
+
                 } else {
                     // User is signed out
                     Log.d(TAG, "onAuthStateChanged:signed_out");

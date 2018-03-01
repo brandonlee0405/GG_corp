@@ -27,7 +27,7 @@
                 android:resource="@xml/file_paths"></meta-data>
         </provider>
 
-        <activity android:name=".MainActivity">
+        <activity android:name=".Database.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -38,7 +38,7 @@
         <activity android:name=".Database.UserInfoActivity" />
         <activity android:name=".ProfileActivity" />
         <activity android:name=".ProfileSettings" />
-        <activity android:name=".Database.LoginActivity" />
+        <activity android:name=".MainActivity" />
         <activity android:name=".CameraActivity" />
 
 
