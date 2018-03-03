@@ -28,6 +28,8 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -51,9 +53,13 @@ public class CameraFragment extends Fragment {
     ImageView imageView;
     String mCurrentPhotoPath;
     String mCurrentPhotoName;
+    String mPhotoTimeStamp;
     private StorageReference mStorageRef = FirebaseStorage.getInstance().getReference();
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     String mCurrentPhotoLink;
+
+    private FirebaseDatabase database = FirebaseDatabase.getInstance();
+    private DatabaseReference myRef = database.getReference();
 
     @Nullable
     @Override
@@ -91,8 +97,8 @@ public class CameraFragment extends Fragment {
             }
 
             if (photoFile != null) {
-                String authorities = getApplicationContext().getPackageName() + ".fileprovider";
-                Uri photoURI = FileProvider.getUriForFile(CameraActivity.this, authorities, createImageFile());
+                String authorities = getActivity().getApplicationContext().getPackageName() + ".fileprovider";
+                Uri photoURI = FileProvider.getUriForFile(getActivity().getApplicationContext(), authorities, createImageFile());
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
                 startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
             }
@@ -102,6 +108,7 @@ public class CameraFragment extends Fragment {
             Uri photoURI = FileProvider.getUriForFile(getActivity().getApplicationContext(), authorities, createImageFile());
             takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
             startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+
 
         }
 
@@ -122,6 +129,7 @@ public class CameraFragment extends Fragment {
                 storageDir
         );
         */
+        mPhotoTimeStamp = timestamp;
         mCurrentPhotoName = imageFileName;
         mCurrentPhotoPath = image.getAbsolutePath();
         return image;
@@ -167,6 +175,7 @@ public class CameraFragment extends Fragment {
         if (user != null) {
             Toast.makeText(getActivity(), user.getEmail(), Toast.LENGTH_LONG).show();
             fName = user.getEmail() + "/";
+            Toast.makeText(getActivity(), user.getUid(), Toast.LENGTH_LONG).show();
         }
         Uri file = Uri.fromFile(filePath);
         StorageReference picRef = mStorageRef.child(fName + imageName);
@@ -178,6 +187,13 @@ public class CameraFragment extends Fragment {
                 //Toast.makeText(getActivity(), downloadUrl.toString(), Toast.LENGTH_LONG).show();
                 Log.d(TAG, "onSuccess: " + downloadUrl.toString());
                 mCurrentPhotoLink = downloadUrl.toString();
+                /*
+                Intent intent = new Intent(getActivity(), ProfileFragment.class);
+                intent.putExtra("Photo_Link", mCurrentPhotoLink);
+                startActivity(intent);
+                */
+                String id = user.getUid();
+                myRef.child("User_Photo").child(id).child(mPhotoTimeStamp).setValue(mCurrentPhotoLink);
             }
         }) .addOnFailureListener(new OnFailureListener() {
             @Override
