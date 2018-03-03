@@ -173,9 +173,9 @@ public class CameraFragment extends Fragment {
         // if there is a user, use the account name for the folder.  So the pictures are account bound
         String fName = "image/";
         if (user != null) {
-            Toast.makeText(getActivity(), user.getEmail(), Toast.LENGTH_LONG).show();
+            //Toast.makeText(getActivity(), user.getEmail(), Toast.LENGTH_LONG).show();
             fName = user.getEmail() + "/";
-            Toast.makeText(getActivity(), user.getUid(), Toast.LENGTH_LONG).show();
+            //Toast.makeText(getActivity(), user.getUid(), Toast.LENGTH_LONG).show();
         }
         Uri file = Uri.fromFile(filePath);
         StorageReference picRef = mStorageRef.child(fName + imageName);
