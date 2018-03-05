@@ -113,14 +113,19 @@ public class ProfileSettings extends AppCompatActivity implements View.OnClickLi
         myRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                // User did not change their username
+                // User did change their username
                 if(!mUserSettings.getUser().getUsername().equals(username)) {
                     checkIfUsernameExists(username);
                 }
 
-                // User did change their username, check if unique
-                else {
+                // Update your fullname
+                if(!mUserSettings.getSettings().getDisplay_name().equals(displayName)) {
+                    mFirebaseMethods.updateUserAccountSettings(displayName, null);
+                }
 
+                // Update your description
+                if(!mUserSettings.getSettings().getDescription().equals(description)) {
+                    mFirebaseMethods.updateUserAccountSettings(null, description);
                 }
             }
 

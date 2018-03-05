@@ -44,6 +44,27 @@ public class FirebaseMethods {
         }
     }
 
+    /**
+     * Update user account settings
+     * @param displayName
+     * @param description
+     */
+    public void updateUserAccountSettings(String displayName, String description) {
+        Log.d(TAG, "updateUserAccountSettings: Updating user account settings");
+        if(displayName != null) {
+            myRef.child(mContext.getString(R.string.dbname_user_account_settings))
+                    .child(userID)
+                    .child(mContext.getString(R.string.field_display_name))
+                    .setValue(displayName);
+        }
+        if(description != null) {
+            myRef.child(mContext.getString(R.string.dbname_user_account_settings))
+                    .child(userID)
+                    .child(mContext.getString(R.string.field_description))
+                    .setValue(description);
+        }
+    }
+
     public void updateUsername(String username) {
         Log.d(TAG, "updateUsername: Updating username to: " + username);
 
