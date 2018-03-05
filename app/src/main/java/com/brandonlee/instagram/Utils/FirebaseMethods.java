@@ -44,25 +44,39 @@ public class FirebaseMethods {
         }
     }
 
-    public boolean checkIfUsernameExists(String username, DataSnapshot dataSnapshot) {
-        Log.d(TAG, "checkIfUsernameExists: checking if " + username + " already exists.");
+    public void updateUsername(String username) {
+        Log.d(TAG, "updateUsername: Updating username to: " + username);
 
-        User user = new User();
+        myRef.child(mContext.getString(R.string.dbname_users))
+                .child(userID)
+                .child(mContext.getString(R.string.field_username))
+                .setValue(username);
 
-        for(DataSnapshot ds: dataSnapshot.child(userID).getChildren()) {
-            Log.d(TAG, "checkIfUsernameExists: datasnapshot: " + ds);
-
-            user.setUsername(ds.getValue(User.class).getUsername());
-            Log.d(TAG, "checkIfUsernameExists: username: " + user.getUsername());
-
-            if(StringManipulation.expandUsername(user.getUsername()).equals(username)) {
-                Log.d(TAG, "checkIfUsernameExists: Found a match: " + user.getUsername());
-                return true;
-            }
-
-        }
-        return false;
+        myRef.child(mContext.getString(R.string.dbname_user_account_settings))
+                .child(userID)
+                .child(mContext.getString(R.string.field_username))
+                .setValue(username);
     }
+
+//    public boolean checkIfUsernameExists(String username, DataSnapshot dataSnapshot) {
+//        Log.d(TAG, "checkIfUsernameExists: checking if " + username + " already exists.");
+//
+//        User user = new User();
+//
+//        for(DataSnapshot ds: dataSnapshot.child(userID).getChildren()) {
+//            Log.d(TAG, "checkIfUsernameExists: datasnapshot: " + ds);
+//
+//            user.setUsername(ds.getValue(User.class).getUsername());
+//            Log.d(TAG, "checkIfUsernameExists: username: " + user.getUsername());
+//
+//            if(StringManipulation.expandUsername(user.getUsername()).equals(username)) {
+//                Log.d(TAG, "checkIfUsernameExists: Found a match: " + user.getUsername());
+//                return true;
+//            }
+//
+//        }
+//        return false;
+//    }
 
 
 
@@ -104,7 +118,7 @@ public class FirebaseMethods {
                 0,
                 0,
                 profile_photo,
-                username
+                StringManipulation.condenseUsername(username)
         );
 
         myRef.child(mContext.getString(R.string.dbname_user_account_settings))
@@ -194,6 +208,8 @@ public class FirebaseMethods {
                                 .getValue(User.class)
                                 .getUser_id()
                 );
+
+                Log.d(TAG, "getUserSettings: retrieved user info: " + user.toString());
 
             }
         }

@@ -18,6 +18,7 @@ import com.brandonlee.instagram.Database.UserSettings;
 import com.brandonlee.instagram.ProfileSettings;
 import com.brandonlee.instagram.R;
 import com.brandonlee.instagram.Utils.FirebaseMethods;
+import com.brandonlee.instagram.Utils.UniversalImageLoader;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -25,6 +26,9 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.nostra13.universalimageloader.core.ImageLoader;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
  * Created by BrandonLee on 2/6/18.
@@ -46,6 +50,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
     private TextView mPosts;
     private TextView mFollowers;
     private TextView mFollowing;
+    private CircleImageView mProfilePhoto;
 
     Activity context;
 
@@ -64,8 +69,11 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         mPosts = (TextView)view.findViewById(R.id.profile_post);
         mFollowers = (TextView)view.findViewById(R.id.profile_followers);
         mFollowing = (TextView)view.findViewById(R.id.profile_following);
+        mProfilePhoto = (CircleImageView)view.findViewById(R.id.profile_image);
 
         view.findViewById(R.id.btnEditProfile).setOnClickListener(this);
+
+        initImageLoader();
 
         setupFirebaseAuth();
 
@@ -73,11 +81,18 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         return view;
     }
 
+    private void initImageLoader() {
+        UniversalImageLoader universalImageLoader = new UniversalImageLoader(getActivity());
+        ImageLoader.getInstance().init(universalImageLoader.getConfig());
+    }
+
     private void setProfileWidgets(UserSettings userSettings) {
         Log.d(TAG, "setProfileWidgets: setting widgets with data from firebase");
 
         User user = userSettings.getUser();
         UserAccountSettings settings = userSettings.getSettings();
+
+        UniversalImageLoader.setImage(settings.getProfile_photo(), mProfilePhoto, null, "");
 
         // Got to do the profile photo
         mFullname.setText(settings.getDisplay_name());

@@ -6,9 +6,9 @@ package com.brandonlee.instagram.Database;
 
 public class User {
 
-    String email;
-    String user_id;
-    String username;
+    private String email;
+    private String user_id;
+    private String username;
 
     public User(String email, String user_id, String username) {
         this.email = email;
@@ -24,20 +24,20 @@ public class User {
         return email;
     }
 
-    public String getUser_id() {
-        return user_id;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
     public void setEmail(String email) {
         this.email = email;
     }
 
+    public String getUser_id() {
+        return user_id;
+    }
+
     public void setUser_id(String user_id) {
         this.user_id = user_id;
+    }
+
+    public String getUsername() {
+        return username;
     }
 
     public void setUsername(String username) {
