@@ -174,7 +174,7 @@ public class CameraFragment extends Fragment {
         String fName = "image/";
         if (user != null) {
             //Toast.makeText(getActivity(), user.getEmail(), Toast.LENGTH_LONG).show();
-            fName = user.getEmail() + "/";
+            fName = "Users/" + user.getUid() + "/";
             //Toast.makeText(getActivity(), user.getUid(), Toast.LENGTH_LONG).show();
         }
         Uri file = Uri.fromFile(filePath);
