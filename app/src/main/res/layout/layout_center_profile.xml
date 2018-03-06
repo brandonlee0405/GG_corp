@@ -12,7 +12,7 @@
             androids:layout_width="match_parent"
             androids:layout_height="wrap_content"
             androids:id="@+id/relLayout1"
-            androids:background="@drawable/white_grey_border_bottom">
+            androids:background="@color/white">
 
             <LinearLayout
                 androids:id="@+id/linLayout1"
@@ -58,7 +58,8 @@
                 androids:orientation="vertical"
                 androids:layout_below="@id/linLayout1"
                 androids:id="@+id/linLayout2"
-                androids:padding="20dp">
+                androids:padding="20dp"
+                androids:background="@drawable/white_grey_border_bottom">
 
                 <TextView
                     androids:layout_width="match_parent"
@@ -86,7 +87,8 @@
                 androids:layout_height="wrap_content"
                 androids:id="@+id/relLayout2"
                 androids:layout_below="@+id/linLayout2"
-                androids:layout_marginBottom="50dp">
+                androids:layout_marginBottom="50dp"
+                androids:background="@drawable/white_grey_border_bottom">
 
                 <GridView
                     androids:layout_width="match_parent"

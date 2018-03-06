@@ -23,6 +23,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.brandonlee.instagram.Database.Photo;
 import com.brandonlee.instagram.R;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -193,7 +194,14 @@ public class CameraFragment extends Fragment {
                 startActivity(intent);
                 */
                 String id = user.getUid();
-                myRef.child("User_Photo").child(id).child(mPhotoTimeStamp).setValue(mCurrentPhotoLink);
+                String newPhotoKey = myRef.child("User_Photo").push().getKey();
+                Photo photo = new Photo();
+                photo.setImage_path(mCurrentPhotoLink);
+                photo.setPhoto_id(newPhotoKey);
+                photo.setUser_id(FirebaseAuth.getInstance().getCurrentUser().getUid());
+                myRef.child("User_Photo")
+                        .child(FirebaseAuth.getInstance().getCurrentUser()
+                                .getUid()).child(newPhotoKey).setValue(photo);
             }
         }) .addOnFailureListener(new OnFailureListener() {
             @Override

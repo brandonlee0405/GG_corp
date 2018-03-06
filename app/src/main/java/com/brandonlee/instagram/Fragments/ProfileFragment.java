@@ -10,14 +10,17 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.GridView;
 import android.widget.TextView;
 
+import com.brandonlee.instagram.Database.Photo;
 import com.brandonlee.instagram.Database.User;
 import com.brandonlee.instagram.Database.UserAccountSettings;
 import com.brandonlee.instagram.Database.UserSettings;
 import com.brandonlee.instagram.ProfileSettings;
 import com.brandonlee.instagram.R;
 import com.brandonlee.instagram.Utils.FirebaseMethods;
+import com.brandonlee.instagram.Utils.GridImageAdapter;
 import com.brandonlee.instagram.Utils.UniversalImageLoader;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -25,8 +28,11 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.nostra13.universalimageloader.core.ImageLoader;
+
+import java.util.ArrayList;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -51,8 +57,11 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
     private TextView mFollowers;
     private TextView mFollowing;
     private CircleImageView mProfilePhoto;
+    private GridView mGridView;
 
     Activity context;
+
+    private static final int NUM_GRID_COLUMNS = 3;
 
 
     @Nullable
@@ -70,15 +79,55 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         mFollowers = (TextView)view.findViewById(R.id.profile_followers);
         mFollowing = (TextView)view.findViewById(R.id.profile_following);
         mProfilePhoto = (CircleImageView)view.findViewById(R.id.profile_image);
+        mGridView = (GridView)view.findViewById(R.id.gridView);
 
         view.findViewById(R.id.btnEditProfile).setOnClickListener(this);
 
         initImageLoader();
 
+        setupGridView();
         setupFirebaseAuth();
 
 
         return view;
+    }
+
+    private void setupGridView() {
+        Log.d(TAG, "setupGridView: setting up the grid view");
+
+        final ArrayList<Photo> photos = new ArrayList<>();
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
+
+        Query query = reference
+                .child(getString(R.string.dbname_User_photos))
+                .child(FirebaseAuth.getInstance().getCurrentUser().getUid());
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot singleSnapshot : dataSnapshot.getChildren()) {
+                    photos.add(singleSnapshot.getValue(Photo.class));
+                }
+
+                int gridWidth = getResources().getDisplayMetrics().widthPixels;
+                int imageWidth = gridWidth/NUM_GRID_COLUMNS;
+
+                mGridView.setColumnWidth(imageWidth);
+
+                ArrayList<String> imgURLS = new ArrayList<String>();
+                for (int i = 0; i < photos.size(); ++i) {
+                    imgURLS.add(photos.get(i).getImage_path());
+                }
+
+                GridImageAdapter adapter = new GridImageAdapter(getActivity(), R.layout.layout_grid_imageview, "", imgURLS);
+                mGridView.setAdapter(adapter);
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
     private void initImageLoader() {
