@@ -41,7 +41,12 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
+import java.util.Locale;
+import java.util.TimeZone;
 
 /**
  * Created by John on 2/15/2018.
@@ -198,6 +203,7 @@ public class CameraFragment extends Fragment {
                 Photo photo = new Photo();
                 photo.setImage_path(mCurrentPhotoLink);
                 photo.setPhoto_id(newPhotoKey);
+                photo.setDate_created(getTimeStamp());
                 photo.setUser_id(id);
                 myRef.child("User_Photo")
                         .child(FirebaseAuth.getInstance().getCurrentUser()
@@ -209,6 +215,12 @@ public class CameraFragment extends Fragment {
 
             }
         });
+    }
+
+    private String getTimeStamp() {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.US);
+        sdf.setTimeZone(TimeZone.getTimeZone("Pacific/Canada"));
+        return sdf.format(new Date());
     }
 
 
