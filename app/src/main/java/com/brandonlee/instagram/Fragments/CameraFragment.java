@@ -198,7 +198,7 @@ public class CameraFragment extends Fragment {
                 Photo photo = new Photo();
                 photo.setImage_path(mCurrentPhotoLink);
                 photo.setPhoto_id(newPhotoKey);
-                photo.setUser_id(FirebaseAuth.getInstance().getCurrentUser().getUid());
+                photo.setUser_id(id);
                 myRef.child("User_Photo")
                         .child(FirebaseAuth.getInstance().getCurrentUser()
                                 .getUid()).child(newPhotoKey).setValue(photo);
