@@ -37,6 +37,8 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 /**
  * Created by BrandonLee on 2/6/18.
  */
@@ -142,7 +144,7 @@ public class HomeFragment extends Fragment {
         @Override
         public View getView(int i, View view, ViewGroup viewGroup) {
             view = getLayoutInflater().inflate(R.layout.customlayout,null);
-            ImageView profile_pic = (ImageView)view.findViewById(R.id.imageView_profilepic);
+            CircleImageView profile_pic = (CircleImageView) view.findViewById(R.id.imageView_profilepic);
             final TextView name = (TextView)view.findViewById(R.id.textView_name);
             ImageView photo = (ImageView)view.findViewById(R.id.imageView_photo);
 
@@ -154,6 +156,7 @@ public class HomeFragment extends Fragment {
                 Toast.makeText(getActivity(), "There doesn't seem to be any photos to show you!", Toast.LENGTH_SHORT).show();
             } else {
                 UniversalImageLoader.setImage(PROFILE_PICS.get(i), profile_pic, null, "");
+                profile_pic.setRotation((float) -90.0);
                 //profile_pic.setRotation((float) 90.0);
                 UniversalImageLoader.setImage(PHOTOS.get(i), photo, null, "");
                 //photo.setRotation((float) 90.0);

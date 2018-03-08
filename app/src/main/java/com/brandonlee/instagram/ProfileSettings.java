@@ -283,6 +283,7 @@ public class ProfileSettings extends AppCompatActivity implements View.OnClickLi
         UserAccountSettings settings = userSettings.getSettings();
 
         UniversalImageLoader.setImage(settings.getProfile_photo(), mProfilePhoto, null, "");
+        mProfilePhoto.setRotation((float) -90.0);
 
         // Got to do the profile photo
         mDescription.setText(settings.getDescription());
@@ -327,6 +328,7 @@ public class ProfileSettings extends AppCompatActivity implements View.OnClickLi
                 if(!mUserSettings.getSettings().getDescription().equals(description)) {
                     mFirebaseMethods.updateUserAccountSettings(null, description);
                 }
+                finish();
             }
 
             @Override

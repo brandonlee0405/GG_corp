@@ -190,6 +190,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         UserAccountSettings settings = userSettings.getSettings();
 
         UniversalImageLoader.setImage(settings.getProfile_photo(), mProfilePhoto, null, "");
+        mProfilePhoto.setRotation((float) -90.0);
         //Toast.makeText(getActivity(), "userid: " + user.getUser_id(), Toast.LENGTH_SHORT).show();
         // Got to do the profile photo
         mFullname.setText(settings.getDisplay_name());
