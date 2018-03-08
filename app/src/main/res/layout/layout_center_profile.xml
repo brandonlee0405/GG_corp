@@ -9,9 +9,11 @@
 
         <!-- ****** Top section ****** -->
         <RelativeLayout
+            androids:id="@+id/relLayout1"
             androids:layout_width="match_parent"
             androids:layout_height="wrap_content"
-            androids:id="@+id/relLayout1"
+            androids:layout_alignParentStart="true"
+            androids:layout_alignParentTop="true"
             androids:background="@color/white">
 
             <LinearLayout
@@ -30,12 +32,12 @@
                     androids:layout_weight="25">
 
                     <de.hdodenhof.circleimageview.CircleImageView
+                        androids:id="@+id/profile_image"
                         androids:layout_width="80dp"
                         androids:layout_height="80dp"
-                        androids:id="@+id/profile_image"
+                        androids:layout_centerVertical="true"
                         apps:civ_border_color="@android:color/black"
-                        apps:civ_border_width="2dp"
-                        androids:layout_centerVertical="true"/>
+                        apps:civ_border_width="2dp" />
 
                 </RelativeLayout>
 
@@ -53,52 +55,51 @@
             </LinearLayout>
 
             <LinearLayout
+                androids:id="@+id/linLayout2"
                 androids:layout_width="match_parent"
                 androids:layout_height="wrap_content"
-                androids:orientation="vertical"
                 androids:layout_below="@id/linLayout1"
-                androids:id="@+id/linLayout2"
-                androids:padding="20dp"
-                androids:background="@drawable/white_grey_border_bottom">
+                androids:background="@drawable/white_grey_border_bottom"
+                androids:orientation="vertical"
+                androids:padding="20dp">
 
                 <TextView
-                    androids:layout_width="match_parent"
-                    androids:layout_height="wrap_content"
                     androids:id="@+id/textView5"
-                    androids:textColor="@android:color/black"
-                    androids:textStyle="bold"
-                    androids:text="Brandon Lee"
-                    androids:textSize="16sp"/>
-
-                <TextView
                     androids:layout_width="match_parent"
                     androids:layout_height="wrap_content"
-                    androids:id="@+id/textView6"
+                    androids:text="Brandon Lee"
                     androids:textColor="@android:color/black"
-                    androids:text="Description"
                     androids:textSize="16sp"
-                    androids:layout_marginTop="5dp"/>
+                    androids:textStyle="bold" />
+
+                <TextView
+                    androids:id="@+id/textView6"
+                    androids:layout_width="match_parent"
+                    androids:layout_height="wrap_content"
+                    androids:layout_marginTop="5dp"
+                    androids:text="Description"
+                    androids:textColor="@android:color/black"
+                    androids:textSize="16sp" />
 
 
             </LinearLayout>
-            
+
             <RelativeLayout
-                androids:layout_width="match_parent"
-                androids:layout_height="wrap_content"
                 androids:id="@+id/relLayout2"
-                androids:layout_below="@+id/linLayout2"
-                androids:layout_marginBottom="50dp"
-                androids:background="@drawable/white_grey_border_bottom">
+                androids:layout_width="match_parent"
+                androids:layout_height="match_parent"
+                androids:layout_below="@+id/linLayout2">
 
                 <GridView
-                    androids:layout_width="match_parent"
-                    androids:layout_height="wrap_content"
                     androids:id="@+id/gridView"
-                    androids:numColumns="3"
-                    androids:verticalSpacing="1dp"
+                    androids:layout_width="match_parent"
+                    androids:layout_height="match_parent"
+                    androids:columnWidth="100dp"
+                    androids:gravity="center"
                     androids:horizontalSpacing="1dp"
+                    androids:numColumns="auto_fit"
                     androids:stretchMode="columnWidth"
-                    androids:gravity="center">
+                    androids:verticalSpacing="1dp">
 
                 </GridView>
 

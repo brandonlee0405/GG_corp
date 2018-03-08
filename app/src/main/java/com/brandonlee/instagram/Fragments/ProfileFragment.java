@@ -1,6 +1,7 @@
 package com.brandonlee.instagram.Fragments;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -10,8 +11,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.brandonlee.instagram.Database.Photo;
 import com.brandonlee.instagram.Database.User;
@@ -21,6 +26,7 @@ import com.brandonlee.instagram.ProfileSettings;
 import com.brandonlee.instagram.R;
 import com.brandonlee.instagram.Utils.FirebaseMethods;
 import com.brandonlee.instagram.Utils.GridImageAdapter;
+import com.brandonlee.instagram.Utils.GridViewImageHelper;
 import com.brandonlee.instagram.Utils.UniversalImageLoader;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -31,6 +37,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -59,6 +66,9 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
     private CircleImageView mProfilePhoto;
     private GridView mGridView;
 
+    //String[] imgUrls;
+    //ArrayList<String> imgUrls;
+
     Activity context;
 
     private static final int NUM_GRID_COLUMNS = 3;
@@ -85,13 +95,38 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
 
         initImageLoader();
 
-        setupGridView();
+        //setupGridView();
+        //gridImage();
+        //mGridView.setAdapter(new ImageAdpaterGridView(context));
+
+        gridImage();
+
         setupFirebaseAuth();
 
 
         return view;
     }
 
+
+    private void gridImage() {
+        ArrayList<String> imgUrls = new ArrayList<>();
+        imgUrls.add("https://firebasestorage.googleapis.com/v0/b/ggcorp-9ffb1.appspot.com/o/Users%2F6jDKySv4Y0ak2N8NaTJxoQF7iF73%2FJPEG_180305_192653_?alt=media&token=9aaaa744-3f29-481c-a162-10388c644686");
+        imgUrls.add("https://firebasestorage.googleapis.com/v0/b/ggcorp-9ffb1.appspot.com/o/Users%2F6jDKySv4Y0ak2N8NaTJxoQF7iF73%2FJPEG_180305_211314_?alt=media&token=9e7a376c-48c6-4402-956e-4bd32c1d6c3a");
+        imgUrls.add("https://firebasestorage.googleapis.com/v0/b/ggcorp-9ffb1.appspot.com/o/Users%2F6jDKySv4Y0ak2N8NaTJxoQF7iF73%2FJPEG_180305_223323_?alt=media&token=4b1f3887-368b-4838-8c36-1226f8973993");
+        imgUrls.add("https://firebasestorage.googleapis.com/v0/b/ggcorp-9ffb1.appspot.com/o/Users%2F6jDKySv4Y0ak2N8NaTJxoQF7iF73%2FJPEG_180305_223323_?alt=media&token=4b1f3887-368b-4838-8c36-1226f8973993");
+        imgUrls.add("https://firebasestorage.googleapis.com/v0/b/ggcorp-9ffb1.appspot.com/o/Users%2F6jDKySv4Y0ak2N8NaTJxoQF7iF73%2FJPEG_180305_223323_?alt=media&token=4b1f3887-368b-4838-8c36-1226f8973993");
+        imgUrls.add("https://firebasestorage.googleapis.com/v0/b/ggcorp-9ffb1.appspot.com/o/Users%2F6jDKySv4Y0ak2N8NaTJxoQF7iF73%2FJPEG_180305_192653_?alt=media&token=9aaaa744-3f29-481c-a162-10388c644686");
+        imgUrls.add("https://firebasestorage.googleapis.com/v0/b/ggcorp-9ffb1.appspot.com/o/Users%2F6jDKySv4Y0ak2N8NaTJxoQF7iF73%2FJPEG_180305_192653_?alt=media&token=9aaaa744-3f29-481c-a162-10388c644686");
+
+        setupImageGridView(imgUrls);
+    }
+
+    private void setupImageGridView(ArrayList<String> imgUrls) {
+        GridViewImageHelper helper =  new GridViewImageHelper(context,R.layout.layout_grid_imageview,"",imgUrls);
+        mGridView.setAdapter(helper);
+    }
+
+    /*
     private void setupGridView() {
         Log.d(TAG, "setupGridView: setting up the grid view");
 
@@ -129,6 +164,79 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
             }
         });
     }
+    */
+
+    /*
+    public class ImageAdpaterGridView extends BaseAdapter {
+        private Context mContext;
+
+        public ImageAdpaterGridView (Context c) {
+            mContext = c;
+        }
+
+        public int getCount() {
+            return imgUrls.size();
+        }
+
+        public String getItem(int position) {
+            return imgUrls.get(position);
+        }
+
+
+        public long getItemId(int position) {
+            return 0;
+        }
+
+        public View getView(int position, View convertView, ViewGroup parent) {
+            ImageView mImageView;
+
+            if (convertView == null) {
+                mImageView = new ImageView(mContext);
+                mImageView.setLayoutParams(new GridView.LayoutParams(480, 480));
+                mImageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                mImageView.setPadding(8,8,8,8);
+            }
+            else {
+                mImageView = (ImageView) convertView;
+            }
+            //String url = getItem(position);
+            String url = imgUrls.get(position);
+            Picasso.with(mContext).load(url).fit().centerCrop().into(mImageView);
+            mImageView.setRotation((float) 90.0);
+            return mImageView;
+        }
+    };
+    */
+
+    /*
+    private void gridImage() {
+        imgUrls = new String[]{
+                "https://firebasestorage.googleapis.com/v0/b/ggcorp-9ffb1.appspot.com/o/Users%2F6jDKySv4Y0ak2N8NaTJxoQF7iF73%2FJPEG_180305_192653_?alt=media&token=9aaaa744-3f29-481c-a162-10388c644686",
+                "https://firebasestorage.googleapis.com/v0/b/ggcorp-9ffb1.appspot.com/o/Users%2F6jDKySv4Y0ak2N8NaTJxoQF7iF73%2FJPEG_180305_211314_?alt=media&token=9e7a376c-48c6-4402-956e-4bd32c1d6c3a",
+                "https://firebasestorage.googleapis.com/v0/b/ggcorp-9ffb1.appspot.com/o/Users%2F6jDKySv4Y0ak2N8NaTJxoQF7iF73%2FJPEG_180305_223323_?alt=media&token=4b1f3887-368b-4838-8c36-1226f8973993",
+                "https://firebasestorage.googleapis.com/v0/b/ggcorp-9ffb1.appspot.com/o/Users%2F6jDKySv4Y0ak2N8NaTJxoQF7iF73%2FJPEG_180305_223323_?alt=media&token=4b1f3887-368b-4838-8c36-1226f8973993",
+                "https://firebasestorage.googleapis.com/v0/b/ggcorp-9ffb1.appspot.com/o/Users%2F6jDKySv4Y0ak2N8NaTJxoQF7iF73%2FJPEG_180305_223323_?alt=media&token=4b1f3887-368b-4838-8c36-1226f8973993",
+                "https://firebasestorage.googleapis.com/v0/b/ggcorp-9ffb1.appspot.com/o/Users%2F6jDKySv4Y0ak2N8NaTJxoQF7iF73%2FJPEG_180305_223323_?alt=media&token=4b1f3887-368b-4838-8c36-1226f8973993",
+                "https://firebasestorage.googleapis.com/v0/b/ggcorp-9ffb1.appspot.com/o/Users%2F6jDKySv4Y0ak2N8NaTJxoQF7iF73%2FJPEG_180305_223323_?alt=media&token=4b1f3887-368b-4838-8c36-1226f8973993",
+                "https://firebasestorage.googleapis.com/v0/b/ggcorp-9ffb1.appspot.com/o/Users%2F6jDKySv4Y0ak2N8NaTJxoQF7iF73%2FJPEG_180305_223323_?alt=media&token=4b1f3887-368b-4838-8c36-1226f8973993"
+        };
+
+    }
+    */
+
+    /*
+    private void gridImage() {
+        imgUrls = new ArrayList ();
+        imgUrls.add("https://firebasestorage.googleapis.com/v0/b/ggcorp-9ffb1.appspot.com/o/Users%2F6jDKySv4Y0ak2N8NaTJxoQF7iF73%2FJPEG_180305_192653_?alt=media&token=9aaaa744-3f29-481c-a162-10388c644686");
+        imgUrls.add("https://firebasestorage.googleapis.com/v0/b/ggcorp-9ffb1.appspot.com/o/Users%2F6jDKySv4Y0ak2N8NaTJxoQF7iF73%2FJPEG_180305_211314_?alt=media&token=9e7a376c-48c6-4402-956e-4bd32c1d6c3a");
+        imgUrls.add("https://firebasestorage.googleapis.com/v0/b/ggcorp-9ffb1.appspot.com/o/Users%2F6jDKySv4Y0ak2N8NaTJxoQF7iF73%2FJPEG_180305_223323_?alt=media&token=4b1f3887-368b-4838-8c36-1226f8973993");
+        imgUrls.add("https://firebasestorage.googleapis.com/v0/b/ggcorp-9ffb1.appspot.com/o/Users%2F6jDKySv4Y0ak2N8NaTJxoQF7iF73%2FJPEG_180305_223323_?alt=media&token=4b1f3887-368b-4838-8c36-1226f8973993");
+        imgUrls.add("https://firebasestorage.googleapis.com/v0/b/ggcorp-9ffb1.appspot.com/o/Users%2F6jDKySv4Y0ak2N8NaTJxoQF7iF73%2FJPEG_180305_223323_?alt=media&token=4b1f3887-368b-4838-8c36-1226f8973993");
+        imgUrls.add("https://firebasestorage.googleapis.com/v0/b/ggcorp-9ffb1.appspot.com/o/Users%2F6jDKySv4Y0ak2N8NaTJxoQF7iF73%2FJPEG_180305_192653_?alt=media&token=9aaaa744-3f29-481c-a162-10388c644686");
+        imgUrls.add("https://firebasestorage.googleapis.com/v0/b/ggcorp-9ffb1.appspot.com/o/Users%2F6jDKySv4Y0ak2N8NaTJxoQF7iF73%2FJPEG_180305_192653_?alt=media&token=9aaaa744-3f29-481c-a162-10388c644686");
+    }
+    */
+
 
     private void initImageLoader() {
         UniversalImageLoader universalImageLoader = new UniversalImageLoader(getActivity());
