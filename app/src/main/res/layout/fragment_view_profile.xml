@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:androids="http://schemas.android.com/apk/res/android"
     androids:layout_width="match_parent"
@@ -8,7 +9,7 @@
         androids:layout_height="wrap_content"
         androids:id="@+id/relLayout1">
 
-        <include layout="@layout/layout_center_profile"/>
+        <include layout="@layout/layout_center_view_profile"/>
 
     </RelativeLayout>
 
