@@ -11,12 +11,14 @@ import android.widget.Toast;
 
 import com.brandonlee.instagram.Database.User;
 import com.brandonlee.instagram.Fragments.HomeFragment;
+import com.brandonlee.instagram.Utils.UniversalImageLoader;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -46,6 +48,19 @@ public class ProfileActivity extends AppCompatActivity {
         mFollowing = findViewById(R.id.profile_following);
         mProfilePhoto = findViewById(R.id.profile_image);
         mGridView = findViewById(R.id.gridView);
+
+        initImageLoader();
+
+        if (savedInstanceState == null) {
+            Bundle extras = getIntent().getExtras();
+            if(extras == null) {
+                username= null;
+            } else {
+                username = extras.getString("USER_NAME");
+            }
+        } else {
+            username = (String) savedInstanceState.getSerializable("USER_NAME");
+        }
 
         if (username == null) {
             Toast.makeText(this, "no username found.", Toast.LENGTH_SHORT).show();
@@ -79,6 +94,8 @@ public class ProfileActivity extends AppCompatActivity {
                         mPosts.setText(singleSnapshot.child("posts").getValue().toString());
                         mFollowing.setText(singleSnapshot.child("following").getValue().toString());
                         mFollowers.setText(singleSnapshot.child("followers").getValue().toString());
+
+                        UniversalImageLoader.setImage(singleSnapshot.child("profile_photo").getValue().toString(), mProfilePhoto, null, "");
                     }
                 }
 
@@ -93,5 +110,10 @@ public class ProfileActivity extends AppCompatActivity {
 
     private void fill() {
 
+    }
+
+    private void initImageLoader() {
+        UniversalImageLoader universalImageLoader = new UniversalImageLoader(ProfileActivity.this);
+        ImageLoader.getInstance().init(universalImageLoader.getConfig());
     }
 }

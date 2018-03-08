@@ -400,6 +400,7 @@ public class HomeFragment extends Fragment {
             }
         });
     }
+    //hello
 
     private void initImageLoader() {
         UniversalImageLoader universalImageLoader = new UniversalImageLoader(getActivity());
