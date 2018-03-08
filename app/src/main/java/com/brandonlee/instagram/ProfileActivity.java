@@ -1,9 +1,12 @@
 package com.brandonlee.instagram;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.TextView;
@@ -60,6 +63,18 @@ public class ProfileActivity extends AppCompatActivity {
         mGridView = findViewById(R.id.gridView);
         mFollow = findViewById(R.id.btnFollow);
         mUnfollow = findViewById(R.id.btnUnfollow);
+
+        mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent i = new Intent(ProfileActivity.this, post_photoActivity.class);
+                i.putExtra("imgURL", imgUrls.get(position));
+                startActivity(i);
+            }
+        });
+
+
 
         initImageLoader();
 
@@ -272,7 +287,7 @@ public class ProfileActivity extends AppCompatActivity {
                         mFollowers.setText(singleSnapshot.child("followers").getValue().toString());
 
                         UniversalImageLoader.setImage(singleSnapshot.child("profile_photo").getValue().toString(), mProfilePhoto, null, "");
-
+                        mProfilePhoto.setRotation((float) -90.0);
                         gridImage();
                     }
                 }
