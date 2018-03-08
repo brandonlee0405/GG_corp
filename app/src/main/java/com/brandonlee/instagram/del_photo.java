@@ -153,7 +153,7 @@ public class del_photo extends AppCompatActivity {
     }
 
     private void archivePhoto() {
-        database.child("User_Photo").child(user.getUid()).child("archived").setValue("1").addOnSuccessListener(new OnSuccessListener<Void>() {
+        database.child("User_Photo").child(user.getUid()).child(photo_id).child("archived").setValue("1").addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
                 Toast.makeText(del_photo.this, "Photo Archived!", Toast.LENGTH_LONG).show();
