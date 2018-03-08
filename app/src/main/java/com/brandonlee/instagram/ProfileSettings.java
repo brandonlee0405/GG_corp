@@ -1,22 +1,36 @@
 package com.brandonlee.instagram;
 
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.Matrix;
+import android.media.ExifInterface;
+import android.media.MediaScannerConnection;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.brandonlee.instagram.Database.LoginActivity;
+import com.brandonlee.instagram.Database.Photo;
 import com.brandonlee.instagram.Database.User;
 import com.brandonlee.instagram.Database.UserAccountSettings;
 import com.brandonlee.instagram.Database.UserSettings;
 import com.brandonlee.instagram.Utils.FirebaseMethods;
 import com.brandonlee.instagram.Utils.UniversalImageLoader;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -25,7 +39,20 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.nostra13.universalimageloader.core.ImageLoader;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+import java.util.TimeZone;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -33,12 +60,22 @@ public class ProfileSettings extends AppCompatActivity implements View.OnClickLi
 
     private static final String TAG = "ProfileSettings";
 
+    static final int REQUEST_IMAGE_CAPTURE = 1;
+
+    FirebaseUser user;
+
     // Firebase
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
     private FirebaseDatabase mFirebaseDatabase;
     private DatabaseReference myRef;
     private FirebaseMethods mFirebaseMethods;
+
+    String mCurrentPhotoPath;
+    String mCurrentPhotoName;
+    String mPhotoTimeStamp;
+    private StorageReference mStorageRef = FirebaseStorage.getInstance().getReference();
+    String mCurrentPhotoLink;
 
     private String userID;
 
@@ -71,7 +108,171 @@ public class ProfileSettings extends AppCompatActivity implements View.OnClickLi
         findViewById(R.id.btnSignOut).setOnClickListener(this);
         findViewById(R.id.btnSubmit).setOnClickListener(this);
 
+        mProfilePhoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
+                try {
+                    takeProfilePic();
+                } catch (IOException e) {
+
+                }
+            }
+        });
+
+
+    }
+
+    private void takeProfilePic() throws IOException {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+
+        if (takePictureIntent.resolveActivity(this.getPackageManager()) != null) {
+
+            String authorities = this.getApplicationContext().getPackageName() + ".fileprovider";
+            Uri photoURI = FileProvider.getUriForFile(this.getApplicationContext(), authorities, createImageFile());
+            takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+
+        }
+
+    }
+
+    private File createImageFile() throws IOException {
+        String timestamp = new SimpleDateFormat("yyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timestamp + "_";
+        File storageDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM), "GG_Corps");
+        if (!storageDir.exists())
+            storageDir.mkdir();
+        //File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(imageFileName, ".jpg", storageDir);
+        /*
+        File image = File.createTempFile(
+                imageFileName,
+                ".jpg",
+                storageDir
+        );
+        */
+        mPhotoTimeStamp = timestamp;
+        mCurrentPhotoName = imageFileName;
+        mCurrentPhotoPath = image.getAbsolutePath();
+        return image;
+    }
+
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == this.RESULT_OK) {
+            //Bundle extras = data.getExtras();
+            //Bitmap imageBitmap = (Bitmap) extras.get("data");
+            //imageView.setImageBitmap(imageBitmap);
+            //setReducedImageSize();
+            Uri imageUri = Uri.parse(mCurrentPhotoPath);
+            File file = new File(imageUri.getPath());
+            Toast.makeText(this, file.toString(), Toast.LENGTH_LONG).show();
+            try {
+                InputStream ims = new FileInputStream(file);
+                //imageView.setImageBitmap(BitmapFactory.decodeStream(ims));
+                Bitmap imageBit =  (Bitmap) BitmapFactory.decodeStream(ims);
+                //imageView.setImageBitmap(rotateImage(imageBit, 90));
+                mProfilePhoto.setImageBitmap(rotateImageIfRequired(this.getApplicationContext(), imageBit, imageUri));
+            } catch (FileNotFoundException e) {
+                return;
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            MediaScannerConnection.scanFile(this.getApplicationContext(),
+                    new String[]{imageUri.getPath()}, null,
+                    new MediaScannerConnection.OnScanCompletedListener() {
+                        public void onScanCompleted(String path, Uri uri) {
+
+                        }
+                    });
+            upLoadPicture(file, mCurrentPhotoName);
+        }
+    }
+
+    private void upLoadPicture(File filePath,  String imageName) {
+        // if there is a user, use the account name for the folder.  So the pictures are account bound
+        String fName = "image/";
+        if (user != null) {
+            //Toast.makeText(getActivity(), user.getEmail(), Toast.LENGTH_LONG).show();
+            fName = "Users/" + user.getUid() + "/";
+            //Toast.makeText(getActivity(), user.getUid(), Toast.LENGTH_LONG).show();
+        }
+        Uri file = Uri.fromFile(filePath);
+        StorageReference picRef = mStorageRef.child(fName + imageName);
+
+        picRef.putFile(file).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                Uri downloadUrl = taskSnapshot.getDownloadUrl();
+                //Toast.makeText(getActivity(), downloadUrl.toString(), Toast.LENGTH_LONG).show();
+                Log.d(TAG, "onSuccess: " + downloadUrl.toString());
+                mCurrentPhotoLink = downloadUrl.toString();
+                /*
+                Intent intent = new Intent(getActivity(), ProfileFragment.class);
+                intent.putExtra("Photo_Link", mCurrentPhotoLink);
+                startActivity(intent);
+                */
+                String id = user.getUid();
+                String newPhotoKey = myRef.child("User_Photo").push().getKey();
+                Photo photo = new Photo();
+                photo.setImage_path(mCurrentPhotoLink);
+                photo.setPhoto_id(newPhotoKey);
+                photo.setDate_created(getTimeStamp());
+                photo.setUser_id(id);
+                photo.setArchived("0");
+                myRef.child("user_account_settings")
+                        .child(FirebaseAuth.getInstance().getCurrentUser()
+                                .getUid()).child("profile_photo").setValue(photo.getImage_path());
+            }
+        }) .addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+
+            }
+        });
+    }
+
+    private String getTimeStamp() {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.US);
+        sdf.setTimeZone(TimeZone.getTimeZone("Pacific/Canada"));
+        return sdf.format(new Date());
+    }
+
+
+    private static Bitmap rotateImageIfRequired(Context context, Bitmap img, Uri selectedImage) throws IOException {
+
+        //InputStream input = context.getContentResolver().openInputStream(selectedImage);
+        ExifInterface ei;
+        /*
+        if (Build.VERSION.SDK_INT > 23)
+            ei = new ExifInterface(input);
+        else
+        */
+        ei = new ExifInterface(selectedImage.getPath());
+
+        int orientation = ei.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
+
+        switch (orientation) {
+            case ExifInterface.ORIENTATION_ROTATE_90:
+                return rotateImage(img, 90);
+            case ExifInterface.ORIENTATION_ROTATE_180:
+                return rotateImage(img, 180);
+            case ExifInterface.ORIENTATION_ROTATE_270:
+                return rotateImage(img, 270);
+            default:
+                return img;
+        }
+    }
+
+    private static Bitmap rotateImage(Bitmap img, int degree) {
+        Matrix matrix = new Matrix();
+        matrix.postRotate(degree);
+        Bitmap rotatedImg = Bitmap.createBitmap(img, 0, 0, img.getWidth(), img.getHeight(), matrix, true);
+        img.recycle();
+        return rotatedImg;
     }
 
     private void setProfileWidgets(UserSettings userSettings) {
@@ -209,7 +410,7 @@ public class ProfileSettings extends AppCompatActivity implements View.OnClickLi
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser user = firebaseAuth.getCurrentUser();
+                user = firebaseAuth.getCurrentUser();
 
                 if (user != null) {
                     // User is signed in
