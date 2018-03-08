@@ -133,7 +133,14 @@ public class del_photo extends AppCompatActivity {
         photoRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
+                // Delete from databse
+                FirebaseDatabase.getInstance().getReference()
+                        .child("User_Photo")
+                        .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                        .child(photo_id)
+                        .removeValue();
                 Toast.makeText(del_photo.this, "Photo Deleted!", Toast.LENGTH_LONG).show();
+                finish();
             }
 
             }).addOnFailureListener(new OnFailureListener() {
@@ -143,13 +150,6 @@ public class del_photo extends AppCompatActivity {
             }
         });
 
-        // Delete from databse
-        FirebaseDatabase.getInstance().getReference()
-                .child("User_Photo")
-                .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                .child(photo_id)
-                .removeValue();
-        
     }
 
     private void archivePhoto() {
@@ -157,6 +157,7 @@ public class del_photo extends AppCompatActivity {
             @Override
             public void onSuccess(Void aVoid) {
                 Toast.makeText(del_photo.this, "Photo Archived!", Toast.LENGTH_LONG).show();
+                finish();
             }
         });
     }
