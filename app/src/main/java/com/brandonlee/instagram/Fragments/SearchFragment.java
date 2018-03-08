@@ -74,13 +74,10 @@ public class SearchFragment extends Fragment implements View.OnClickListener{
                 }
                 for (DataSnapshot singleSnapshot : dataSnapshot.getChildren()) {
                     if (singleSnapshot.exists()) {
-                        mUserList.add(singleSnapshot.getValue(User.class));
-                        // go to user's profile
-                        Log.d(TAG, "onDataChange: Testing: " + getActivity());
-                        Intent intent = new Intent(getActivity(), ProfileActivity.class);
-                        intent.putExtra(getString(R.string.calling_activity), getString(R.string.search_activity));
-                        intent.putExtra(getString(R.string.intent_user), mUserList.get(0));
-                        startActivity(intent);
+                        Intent i = new Intent(getActivity(), ProfileActivity.class);
+                        String user_id = singleSnapshot.child("user_id").getValue().toString();
+                        i.putExtra("USER_ID", user_id);
+                        startActivity(i);
                     }
 
                 }
