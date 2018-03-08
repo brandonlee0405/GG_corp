@@ -23,6 +23,7 @@ import com.brandonlee.instagram.R;
 import com.brandonlee.instagram.Utils.FirebaseMethods;
 import com.brandonlee.instagram.Utils.GridViewImageHelper;
 import com.brandonlee.instagram.Utils.UniversalImageLoader;
+import com.brandonlee.instagram.del_photo;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -97,7 +98,9 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
 
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(getActivity(), "pic " + imgUrls.get(position) + " clicked" , Toast.LENGTH_SHORT).show();
+                Intent i = new Intent(getActivity(), del_photo.class);
+                i.putExtra("imgURL", imgUrls.get(position));
+                startActivity(i);
             }
         });
 
@@ -122,6 +125,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
 
     private void gridImage() {
 
+        imgUrls = new ArrayList<>();
         //test images
         /*imgUrls.add("https://firebasestorage.googleapis.com/v0/b/ggcorp-9ffb1.appspot.com/o/Users%2F6jDKySv4Y0ak2N8NaTJxoQF7iF73%2FJPEG_180305_192653_?alt=media&token=9aaaa744-3f29-481c-a162-10388c644686");
         imgUrls.add("https://firebasestorage.googleapis.com/v0/b/ggcorp-9ffb1.appspot.com/o/Users%2F6jDKySv4Y0ak2N8NaTJxoQF7iF73%2FJPEG_180305_211314_?alt=media&token=9e7a376c-48c6-4402-956e-4bd32c1d6c3a");

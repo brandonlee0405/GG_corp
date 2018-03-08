@@ -174,9 +174,22 @@ public class HomeFragment extends Fragment {
         }
     }
 
+    private void clear() {
+
+        PROFILE_PICS = new ArrayList<>();
+        NAMES = new ArrayList<>();
+        PHOTOS = new ArrayList<>();
+
+        followingInfo = new HashMap<String, Pair<String, String>>();
+        following = new ArrayList<>();
+        pics = new ArrayList<>();
+    }
+
     private void getFollowing(FirebaseUser user) {
 
         if(isAdded()) {
+            clear();
+
             Log.d(TAG, "setProfileWidgets: setting widgets with data from firebase");
 
             //Toast.makeText(getActivity(), "userid: " + user.getUid(), Toast.LENGTH_SHORT).show();
@@ -304,7 +317,7 @@ public class HomeFragment extends Fragment {
                                         Toast.makeText(getActivity(), "pic is not archived", Toast.LENGTH_SHORT).show();
                                         Pic pic = new Pic();
                                         pic.setOwner(ss.child("user_id").getValue().toString());
-                                        pic.setTimestamp(ss.child("time_created").getValue().toString());
+                                        pic.setTimestamp(ss.child("date_created").getValue().toString());
                                         pic.setDownloadUrl(ss.child("image_path").getValue().toString());
                                         pics.add(pic);
                                     }
