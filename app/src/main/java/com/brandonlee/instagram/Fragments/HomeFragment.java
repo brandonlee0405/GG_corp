@@ -90,6 +90,8 @@ public class HomeFragment extends Fragment {
         }
     }
 
+    private HashMap<String, Pair<String, String>> followingInfo = new HashMap<String, Pair<String, String>>();
+
     // testing data
     int[] TEST_PROFILE_PICS = {R.drawable.sample_profile_pic, R.drawable.sample_profile_pic_2, R.drawable.sample_profile_pic_3};
     int[] TEST_PHOTOS = {R.drawable.sample_pic, R.drawable.sample_pic_2, R.drawable.sample_pic_3};
@@ -164,8 +166,8 @@ public class HomeFragment extends Fragment {
                 @Override
                 public void onClick(View v) {
                     Intent i = new Intent(getActivity(), ProfileActivity.class);
-                    String username = name.getText().toString();
-                    i.putExtra("USER_NAME", username);
+                    String user_id = followingInfo.get(name.getText().toString()).first;
+                    i.putExtra("USER_ID", user_id);
                     startActivity(i);
                 }
             });
@@ -210,7 +212,7 @@ public class HomeFragment extends Fragment {
                         for (int i = 0; i < following.length; i++) {
                             //Toast.makeText(getActivity(), following[i], Toast.LENGTH_SHORT).show();
                         }
-                        getFollowingInfo(following, new HashMap<String, Pair<String, String>>(),  0);
+                        getFollowingInfo(following, followingInfo,  0);
                     }
 
                 }
@@ -400,7 +402,6 @@ public class HomeFragment extends Fragment {
             }
         });
     }
-    //hello
 
     private void initImageLoader() {
         UniversalImageLoader universalImageLoader = new UniversalImageLoader(getActivity());

@@ -25,7 +25,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class ProfileActivity extends AppCompatActivity {
     private static final String TAG = "ProfileActivity";
 
-    private String username;
+    private String user_id;
 
     private TextView mFullname;
     private TextView mDescription;
@@ -54,15 +54,15 @@ public class ProfileActivity extends AppCompatActivity {
         if (savedInstanceState == null) {
             Bundle extras = getIntent().getExtras();
             if(extras == null) {
-                username= null;
+                user_id = null;
             } else {
-                username = extras.getString("USER_NAME");
+                user_id = extras.getString("USER_ID");
             }
         } else {
-            username = (String) savedInstanceState.getSerializable("USER_NAME");
+            user_id = (String) savedInstanceState.getSerializable("USER_ID");
         }
 
-        if (username == null) {
+        if (user_id == null) {
             Toast.makeText(this, "no username found.", Toast.LENGTH_SHORT).show();
         }
         else {
@@ -76,7 +76,7 @@ public class ProfileActivity extends AppCompatActivity {
         Query query = reference
                 .child(getString(R.string.dbname_user_account_settings))
                 .orderByKey()
-                .equalTo(username);
+                .equalTo(user_id);
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -96,6 +96,8 @@ public class ProfileActivity extends AppCompatActivity {
                         mFollowers.setText(singleSnapshot.child("followers").getValue().toString());
 
                         UniversalImageLoader.setImage(singleSnapshot.child("profile_photo").getValue().toString(), mProfilePhoto, null, "");
+
+                        //fillGrid();
                     }
                 }
 
@@ -108,7 +110,7 @@ public class ProfileActivity extends AppCompatActivity {
         });
     }
 
-    private void fill() {
+    private void fillGrid() {
 
     }
 
