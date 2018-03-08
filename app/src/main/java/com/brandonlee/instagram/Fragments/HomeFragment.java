@@ -116,7 +116,9 @@ public class HomeFragment extends Fragment {
 
         initImageLoader();
 
-        setupFirebaseAuth();
+        if(isAdded()){
+            setupFirebaseAuth();
+        }
 
         return view;
     }
@@ -176,7 +178,7 @@ public class HomeFragment extends Fragment {
     private void getFollowing(FirebaseUser user) {
         Log.d(TAG, "setProfileWidgets: setting widgets with data from firebase");
 
-        Toast.makeText(getActivity(), "userid: " + user.getUid(), Toast.LENGTH_SHORT).show();
+        //Toast.makeText(getActivity(), "userid: " + user.getUid(), Toast.LENGTH_SHORT).show();
 
         // query database
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
