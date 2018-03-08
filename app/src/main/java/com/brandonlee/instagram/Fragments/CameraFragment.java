@@ -205,6 +205,7 @@ public class CameraFragment extends Fragment {
                 photo.setPhoto_id(newPhotoKey);
                 photo.setDate_created(getTimeStamp());
                 photo.setUser_id(id);
+                photo.setArchived("0");
                 myRef.child("User_Photo")
                         .child(FirebaseAuth.getInstance().getCurrentUser()
                                 .getUid()).child(newPhotoKey).setValue(photo);

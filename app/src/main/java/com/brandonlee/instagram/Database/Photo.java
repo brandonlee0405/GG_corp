@@ -10,16 +10,18 @@ public class Photo {
     private String photo_id;
     private String user_id;
     private String date_created;
+    private String archived;
 
     public Photo() {
 
     }
 
-    public Photo(String image_path, String photo_id, String user_id, String date_created) {
+    public Photo(String image_path, String photo_id, String user_id, String date_created, String archived) {
         this.image_path = image_path;
         this.photo_id = photo_id;
         this.user_id = user_id;
         this.date_created = date_created;
+        this.archived = archived;
     }
 
     public String getImage_path() {
@@ -54,6 +56,14 @@ public class Photo {
         this.date_created = date_created;
     }
 
+    public String getArchived() {
+        return archived;
+    }
+
+    public void setArchived(String archived) {
+        this.archived = archived;
+    }
+
     @Override
     public String toString() {
         return "Photo{" +
@@ -61,6 +71,7 @@ public class Photo {
                 ", photo_id='" + photo_id + '\'' +
                 ", user_id='" + user_id + '\'' +
                 ", date_created='" + date_created + '\'' +
+                ", archived='" + archived + '\'' +
                 '}';
     }
 }

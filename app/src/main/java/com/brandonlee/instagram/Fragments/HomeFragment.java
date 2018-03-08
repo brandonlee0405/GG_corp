@@ -29,6 +29,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.StorageReference;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
@@ -107,16 +108,14 @@ public class HomeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
-        mFirebaseMethods = new FirebaseMethods(getActivity());
-
         listView = (ListView)view.findViewById(R.id.listView);
 
         //CustomAdapter customAdapter = new CustomAdapter();
         //listView.setAdapter(customAdapter);
 
-        initImageLoader();
-
         if(isAdded()){
+            mFirebaseMethods = new FirebaseMethods(getActivity());
+            initImageLoader();
             setupFirebaseAuth();
         }
 
@@ -176,58 +175,63 @@ public class HomeFragment extends Fragment {
     }
 
     private void getFollowing(FirebaseUser user) {
-        Log.d(TAG, "setProfileWidgets: setting widgets with data from firebase");
 
-        //Toast.makeText(getActivity(), "userid: " + user.getUid(), Toast.LENGTH_SHORT).show();
+        if(isAdded()) {
+            Log.d(TAG, "setProfileWidgets: setting widgets with data from firebase");
 
-        // query database
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
+            //Toast.makeText(getActivity(), "userid: " + user.getUid(), Toast.LENGTH_SHORT).show();
 
-        Query query = reference
-                .child(getString(R.string.dbname_following))
-                .orderByKey()
-                .equalTo(user.getUid());
-        query.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
+            // query database
+            DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
 
-                if (!dataSnapshot.exists()) {
-                    // display message that user was not found
-                    Toast.makeText(getActivity(), "following not found.", Toast.LENGTH_SHORT).show();
-                }
+            Query query = reference
+                    .child(getString(R.string.dbname_following))
+                    .orderByKey()
+                    .equalTo(user.getUid());
+            query.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
 
-                // get userId's of following
-                for (DataSnapshot singleSnapshot : dataSnapshot.getChildren()) {
-                    if (singleSnapshot.exists()) {
-                        // go to user's profile
-                        for (DataSnapshot ss : singleSnapshot.getChildren()) {
-                            if (ss.exists()) {
-                                following.add(ss.child("user_id").getValue().toString());
-                                Toast.makeText(getActivity(), ss.child("user_id").getValue().toString(), Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                        getFollowingInfo(0);
+                    if (!dataSnapshot.exists()) {
+                        // display message that user was not found
+                        Toast.makeText(getActivity(), "following not found.", Toast.LENGTH_SHORT).show();
                     }
 
+                    // get userId's of following
+                    for (DataSnapshot singleSnapshot : dataSnapshot.getChildren()) {
+                        if (singleSnapshot.exists()) {
+                            // go to user's profile
+                            for (DataSnapshot ss : singleSnapshot.getChildren()) {
+                                if (ss.exists()) {
+                                    following.add(ss.child("user_id").getValue().toString());
+                                    Toast.makeText(getActivity(), ss.child("user_id").getValue().toString(), Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                            getFollowingInfo(0);
+                        }
+
+                    }
+
+
+                    // retrieve pics from following
+
+
                 }
 
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
 
-                // retrieve pics from following
+                }
+            });
 
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-
+        }
 
     }
 
     private void getFollowingInfo(final int index) {
-        // get following usernames and profile pics
+
+        if (isAdded()) {
+            // get following usernames and profile pics
             DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
 
             Query query = reference
@@ -242,14 +246,14 @@ public class HomeFragment extends Fragment {
                         // display message that user was not found
                         Toast.makeText(getActivity(), "no pics found.", Toast.LENGTH_SHORT).show();
                     }
-;
+                    ;
                     // get userId's of following
                     for (DataSnapshot singleSnapshot : dataSnapshot.getChildren()) {
                         if (singleSnapshot.exists()) {
                             //Toast.makeText(getActivity(), singleSnapshot.child("username").getValue().toString(), Toast.LENGTH_SHORT).show();
                             //Toast.makeText(getActivity(), singleSnapshot.child("profile_photo").getValue().toString(), Toast.LENGTH_SHORT).show();
 
-                            String username =  singleSnapshot.child("username").getValue().toString();
+                            String username = singleSnapshot.child("username").getValue().toString();
                             String profile_pic = singleSnapshot.child("profile_photo").getValue().toString();
                             Pair<String, String> pair = new Pair<>(username, profile_pic);
 
@@ -260,8 +264,7 @@ public class HomeFragment extends Fragment {
 
                     if (index < following.size() - 1) {
                         getFollowingInfo(index + 1);
-                    }
-                    else {
+                    } else {
                         getPics(0);
                     }
 
@@ -272,56 +275,60 @@ public class HomeFragment extends Fragment {
 
                 }
             });
+        }
     }
 
     private void getPics(final int index) {
+        if (isAdded()) {
+            DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
 
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
+            Query query = reference
+                    .child(getString(R.string.dbname_user_photos))
+                    .orderByKey()
+                    .equalTo(following.get(index));
+            query.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
 
-        Query query = reference
-                .child(getString(R.string.dbname_user_photos))
-                .orderByKey()
-                .equalTo(following.get(index));
-        query.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
+                    if (!dataSnapshot.exists()) {
+                        // display message that user was not found
+                        Toast.makeText(getActivity(), "no pics found.", Toast.LENGTH_SHORT).show();
+                    }
 
-                if (!dataSnapshot.exists()) {
-                    // display message that user was not found
-                    Toast.makeText(getActivity(), "no pics found.", Toast.LENGTH_SHORT).show();
-                }
-
-                // get userId's of following
-                for (DataSnapshot singleSnapshot : dataSnapshot.getChildren()) {
-                    if (singleSnapshot.exists()) {
-                        for (DataSnapshot ss : singleSnapshot.getChildren()) {
-                            if (ss.exists()) {
-                                Pic pic = new Pic();
-                                pic.setOwner(ss.child("user_id").getValue().toString());
-                                pic.setTimestamp(ss.child("time_created").getValue().toString());
-                                pic.setDownloadUrl(ss.child("image_path").getValue().toString());
-                                pics.add(pic);
+                    // get userId's of following
+                    for (DataSnapshot singleSnapshot : dataSnapshot.getChildren()) {
+                        if (singleSnapshot.exists()) {
+                            for (DataSnapshot ss : singleSnapshot.getChildren()) {
+                                if (ss.exists()) {
+                                    if (ss.child("archived").getValue().toString().equals("0")) {
+                                        Toast.makeText(getActivity(), "pic is not archived", Toast.LENGTH_SHORT).show();
+                                        Pic pic = new Pic();
+                                        pic.setOwner(ss.child("user_id").getValue().toString());
+                                        pic.setTimestamp(ss.child("time_created").getValue().toString());
+                                        pic.setDownloadUrl(ss.child("image_path").getValue().toString());
+                                        pics.add(pic);
+                                    }
+                                }
                             }
                         }
                     }
+
+                    if (index < following.size() - 1) {
+                        getPics(index + 1);
+                    } else {
+                        // done querying
+                        Toast.makeText(getActivity(), "ready to display pics", Toast.LENGTH_SHORT).show();
+                        displayPics();
+                    }
+
                 }
 
-                if (index < following.size() - 1) {
-                    getPics(index + 1);
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
                 }
-                else {
-                    // done querying
-                    Toast.makeText(getActivity(), "ready to display pics", Toast.LENGTH_SHORT).show();
-                    displayPics();
-                }
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
+            });
+        }
     }
 
     private void displayPics() {
