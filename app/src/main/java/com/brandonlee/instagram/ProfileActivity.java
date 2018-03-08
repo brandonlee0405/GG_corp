@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import com.brandonlee.instagram.Database.User;
 import com.brandonlee.instagram.Fragments.HomeFragment;
+import com.brandonlee.instagram.Utils.GridViewImageHelper;
 import com.brandonlee.instagram.Utils.UniversalImageLoader;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -19,6 +20,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.nostra13.universalimageloader.core.ImageLoader;
+
+import java.util.ArrayList;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -34,7 +37,9 @@ public class ProfileActivity extends AppCompatActivity {
     private TextView mFollowing;
     private CircleImageView mProfilePhoto;
     private GridView mGridView;
-    
+
+    ArrayList<String> imgUrls = new ArrayList<>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -97,7 +102,7 @@ public class ProfileActivity extends AppCompatActivity {
 
                         UniversalImageLoader.setImage(singleSnapshot.child("profile_photo").getValue().toString(), mProfilePhoto, null, "");
 
-                        //fillGrid();
+                        gridImage();
                     }
                 }
 
@@ -110,8 +115,58 @@ public class ProfileActivity extends AppCompatActivity {
         });
     }
 
-    private void fillGrid() {
+    private void gridImage() {
 
+        //test images
+        /*imgUrls.add("https://firebasestorage.googleapis.com/v0/b/ggcorp-9ffb1.appspot.com/o/Users%2F6jDKySv4Y0ak2N8NaTJxoQF7iF73%2FJPEG_180305_192653_?alt=media&token=9aaaa744-3f29-481c-a162-10388c644686");
+        imgUrls.add("https://firebasestorage.googleapis.com/v0/b/ggcorp-9ffb1.appspot.com/o/Users%2F6jDKySv4Y0ak2N8NaTJxoQF7iF73%2FJPEG_180305_211314_?alt=media&token=9e7a376c-48c6-4402-956e-4bd32c1d6c3a");
+        imgUrls.add("https://firebasestorage.googleapis.com/v0/b/ggcorp-9ffb1.appspot.com/o/Users%2F6jDKySv4Y0ak2N8NaTJxoQF7iF73%2FJPEG_180305_223323_?alt=media&token=4b1f3887-368b-4838-8c36-1226f8973993");
+        imgUrls.add("https://firebasestorage.googleapis.com/v0/b/ggcorp-9ffb1.appspot.com/o/Users%2F6jDKySv4Y0ak2N8NaTJxoQF7iF73%2FJPEG_180305_223323_?alt=media&token=4b1f3887-368b-4838-8c36-1226f8973993");
+        imgUrls.add("https://firebasestorage.googleapis.com/v0/b/ggcorp-9ffb1.appspot.com/o/Users%2F6jDKySv4Y0ak2N8NaTJxoQF7iF73%2FJPEG_180305_223323_?alt=media&token=4b1f3887-368b-4838-8c36-1226f8973993");
+        imgUrls.add("https://firebasestorage.googleapis.com/v0/b/ggcorp-9ffb1.appspot.com/o/Users%2F6jDKySv4Y0ak2N8NaTJxoQF7iF73%2FJPEG_180305_192653_?alt=media&token=9aaaa744-3f29-481c-a162-10388c644686");
+        imgUrls.add("https://firebasestorage.googleapis.com/v0/b/ggcorp-9ffb1.appspot.com/o/Users%2F6jDKySv4Y0ak2N8NaTJxoQF7iF73%2FJPEG_180305_192653_?alt=media&token=9aaaa744-3f29-481c-a162-10388c644686");*/
+
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
+
+        Query query = reference
+                .child(getString(R.string.dbname_user_photos))
+                .orderByKey()
+                .equalTo(user_id);
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                if (!dataSnapshot.exists()) {
+                    // display message that user was not found
+                    Toast.makeText(ProfileActivity.this, "nothing found", Toast.LENGTH_SHORT).show();
+                }
+
+                // get userId's of following
+                for (DataSnapshot singleSnapshot : dataSnapshot.getChildren()) {
+                    if (singleSnapshot.exists()) {
+                        for (DataSnapshot ss : singleSnapshot.getChildren()) {
+                            if (ss.exists()) {
+                                imgUrls.add(ss.child("image_path").getValue().toString());
+                            }
+                        }
+
+                        setupImageGridView(imgUrls);
+                    }
+                }
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+    }
+
+    private void setupImageGridView(ArrayList<String> imgUrls) {
+        GridViewImageHelper helper =  new GridViewImageHelper(this,R.layout.layout_grid_imageview,"",imgUrls);
+        mGridView.setAdapter(helper);
     }
 
     private void initImageLoader() {
