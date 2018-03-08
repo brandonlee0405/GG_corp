@@ -151,7 +151,7 @@ public class HomeFragment extends Fragment {
             //name.setText(TEST_NAMES[i]);
 
             if (PROFILE_PICS.size() == 0 || PHOTOS.size() == 0 || NAMES.size() == 0) {
-                Toast.makeText(getActivity(), "No pictures to display.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "There doesn't seem to be any photos to show you!", Toast.LENGTH_SHORT).show();
             } else {
                 UniversalImageLoader.setImage(PROFILE_PICS.get(i), profile_pic, null, "");
                 //profile_pic.setRotation((float) 90.0);
@@ -207,7 +207,7 @@ public class HomeFragment extends Fragment {
 
                     if (!dataSnapshot.exists()) {
                         // display message that user was not found
-                        Toast.makeText(getActivity(), "following not found.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), "Follow someone to see their photos!", Toast.LENGTH_SHORT).show();
                     }
 
                     // get userId's of following
@@ -217,7 +217,7 @@ public class HomeFragment extends Fragment {
                             for (DataSnapshot ss : singleSnapshot.getChildren()) {
                                 if (ss.exists()) {
                                     following.add(ss.child("user_id").getValue().toString());
-                                    Toast.makeText(getActivity(), ss.child("user_id").getValue().toString(), Toast.LENGTH_SHORT).show();
+                                    //Toast.makeText(getActivity(), ss.child("user_id").getValue().toString(), Toast.LENGTH_SHORT).show();
                                 }
                             }
                             getFollowingInfo(0);
@@ -257,7 +257,7 @@ public class HomeFragment extends Fragment {
 
                     if (!dataSnapshot.exists()) {
                         // display message that user was not found
-                        Toast.makeText(getActivity(), "no pics found.", Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(getActivity(), "no pics found.", Toast.LENGTH_SHORT).show();
                     }
                     ;
                     // get userId's of following
@@ -305,7 +305,7 @@ public class HomeFragment extends Fragment {
 
                     if (!dataSnapshot.exists()) {
                         // display message that user was not found
-                        Toast.makeText(getActivity(), "no pics found.", Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(getActivity(), "no pics found.", Toast.LENGTH_SHORT).show();
                     }
 
                     // get userId's of following
@@ -314,7 +314,7 @@ public class HomeFragment extends Fragment {
                             for (DataSnapshot ss : singleSnapshot.getChildren()) {
                                 if (ss.exists()) {
                                     if (ss.child("archived").getValue().toString().equals("0")) {
-                                        Toast.makeText(getActivity(), "pic is not archived", Toast.LENGTH_SHORT).show();
+                                        //Toast.makeText(getActivity(), "pic is not archived", Toast.LENGTH_SHORT).show();
                                         Pic pic = new Pic();
                                         pic.setOwner(ss.child("user_id").getValue().toString());
                                         pic.setTimestamp(ss.child("date_created").getValue().toString());
@@ -330,7 +330,7 @@ public class HomeFragment extends Fragment {
                         getPics(index + 1);
                     } else {
                         // done querying
-                        Toast.makeText(getActivity(), "ready to display pics", Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(getActivity(), "ready to display pics", Toast.LENGTH_SHORT).show();
                         displayPics();
                     }
 
@@ -430,7 +430,7 @@ public class HomeFragment extends Fragment {
 
                 if (!dataSnapshot.exists()) {
                     // display message that user was not found
-                    Toast.makeText(getActivity(), "User not found.", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(getActivity(), "User not found.", Toast.LENGTH_SHORT).show();
                 }
                 for (DataSnapshot singleSnapshot : dataSnapshot.getChildren()) {
                     if (singleSnapshot.exists()) {

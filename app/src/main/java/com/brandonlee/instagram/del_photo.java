@@ -102,7 +102,7 @@ public class del_photo extends AppCompatActivity {
 
                 if (!dataSnapshot.exists()) {
                     // display message that user was not found
-                    Toast.makeText(del_photo.this, "not found.", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(del_photo.this, "not found.", Toast.LENGTH_SHORT).show();
                 }
                 for (DataSnapshot singleSnapshot : dataSnapshot.getChildren()) {
                     if (singleSnapshot.exists()) {
@@ -110,7 +110,7 @@ public class del_photo extends AppCompatActivity {
                             if (ss.exists()) {
                                 if (ss.child("image_path").getValue().toString().equals(imgURL)) {
                                     photo_id = ss.child("photo_id").getValue().toString();
-                                    Toast.makeText(del_photo.this, "found " + photo_id, Toast.LENGTH_SHORT).show();
+                                    //Toast.makeText(del_photo.this, "found " + photo_id, Toast.LENGTH_SHORT).show();
                                 }
                             }
                         }

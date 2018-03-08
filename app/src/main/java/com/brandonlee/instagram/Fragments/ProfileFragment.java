@@ -146,7 +146,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
 
                 if (!dataSnapshot.exists()) {
                     // display message that user was not found
-                    Toast.makeText(getActivity(), "nothing found", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(getActivity(), "nothing found", Toast.LENGTH_SHORT).show();
                 }
 
                 // get userId's of following
@@ -287,7 +287,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 user = firebaseAuth.getCurrentUser();
-                Toast.makeText(getActivity(),"userid : " + user.getUid(), Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getActivity(),"userid : " + user.getUid(), Toast.LENGTH_SHORT).show();
                 if (user != null) {
                     // User is signed in
                     Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());

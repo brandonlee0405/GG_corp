@@ -259,7 +259,7 @@ public class ProfileActivity extends AppCompatActivity {
 
                 if (!dataSnapshot.exists()) {
                     // display message that user was not found
-                    Toast.makeText(ProfileActivity.this, "nothing found", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(ProfileActivity.this, "nothing found", Toast.LENGTH_SHORT).show();
                 }
 
                 // get userId's of following
@@ -310,7 +310,7 @@ public class ProfileActivity extends AppCompatActivity {
 
                 if (!dataSnapshot.exists()) {
                     // display message that user was not found
-                    Toast.makeText(ProfileActivity.this, "nothing found", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(ProfileActivity.this, "nothing found", Toast.LENGTH_SHORT).show();
                 }
 
                 // get userId's of following
