@@ -211,6 +211,7 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     private void gridImage() {
+        imgUrls = new ArrayList<>();
 
         //test images
         /*imgUrls.add("https://firebasestorage.googleapis.com/v0/b/ggcorp-9ffb1.appspot.com/o/Users%2F6jDKySv4Y0ak2N8NaTJxoQF7iF73%2FJPEG_180305_192653_?alt=media&token=9aaaa744-3f29-481c-a162-10388c644686");

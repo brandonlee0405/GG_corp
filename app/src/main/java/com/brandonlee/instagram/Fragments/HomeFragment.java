@@ -80,6 +80,8 @@ public class HomeFragment extends Fragment {
     }
 
     private HashMap<String, Pair<String, String>> followingInfo = new HashMap<String, Pair<String, String>>();
+    private ArrayList<String> following = new ArrayList<>();
+    private ArrayList<Pic> pics = new ArrayList<>();
 
     // testing data
     int[] TEST_PROFILE_PICS = {R.drawable.sample_profile_pic, R.drawable.sample_profile_pic_2, R.drawable.sample_profile_pic_3};
@@ -123,7 +125,7 @@ public class HomeFragment extends Fragment {
 
         @Override
         public int getCount() {
-            return TEST_PROFILE_PICS.length;
+            return PROFILE_PICS.size();
         }
 
         @Override
@@ -146,20 +148,26 @@ public class HomeFragment extends Fragment {
             //profile_pic.setImageResource(TEST_PROFILE_PICS[i]);
             //photo.setImageResource(TEST_PHOTOS[i]);
             //name.setText(TEST_NAMES[i]);
-            UniversalImageLoader.setImage(PROFILE_PICS.get(i), profile_pic, null, "");
-            UniversalImageLoader.setImage(PHOTOS.get(i), photo, null, "");
-            name.setText(NAMES.get(i));
+
+            if (PROFILE_PICS.size() == 0 || PHOTOS.size() == 0 || NAMES.size() == 0) {
+                Toast.makeText(getActivity(), "No pictures to display.", Toast.LENGTH_SHORT).show();
+            } else {
+                UniversalImageLoader.setImage(PROFILE_PICS.get(i), profile_pic, null, "");
+                //profile_pic.setRotation((float) 90.0);
+                UniversalImageLoader.setImage(PHOTOS.get(i), photo, null, "");
+                //photo.setRotation((float) 90.0);
+                name.setText(NAMES.get(i));
 
 
-            name.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent i = new Intent(getActivity(), ProfileActivity.class);
-                    String user_id = followingInfo.get(name.getText().toString()).first;
-                    i.putExtra("USER_ID", user_id);
-                    startActivity(i);
-                }
-            });
+                name.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        goToProfile(name.getText().toString());
+
+                    }
+                });
+            }
 
             return view;
         }
@@ -174,7 +182,7 @@ public class HomeFragment extends Fragment {
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
 
         Query query = reference
-                .child(getString(R.string.dbname_users))
+                .child(getString(R.string.dbname_following))
                 .orderByKey()
                 .equalTo(user.getUid());
         query.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -183,27 +191,20 @@ public class HomeFragment extends Fragment {
 
                 if (!dataSnapshot.exists()) {
                     // display message that user was not found
-                    Toast.makeText(getActivity(), "not found.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "following not found.", Toast.LENGTH_SHORT).show();
                 }
 
                 // get userId's of following
                 for (DataSnapshot singleSnapshot : dataSnapshot.getChildren()) {
                     if (singleSnapshot.exists()) {
                         // go to user's profile
-                        if (singleSnapshot.child("following").exists()) {
-                            User user = singleSnapshot.getValue(User.class);
-                            String string = singleSnapshot.child("following").getValue().toString();
-                            string = string.replace("{", "");
-                            string = string.replace("}", "");
-                            string = string.replace(",", "");
-                            string = string.replace("=1", "");
-                            string = string.replaceAll("[0-9a-zA-Z]+=0", "");
-                            String[] following = string.split("\\s+");
-                            for (int i = 0; i < following.length; i++) {
-                                //Toast.makeText(getActivity(), following[i], Toast.LENGTH_SHORT).show();
+                        for (DataSnapshot ss : singleSnapshot.getChildren()) {
+                            if (ss.exists()) {
+                                following.add(ss.child("user_id").getValue().toString());
+                                Toast.makeText(getActivity(), ss.child("user_id").getValue().toString(), Toast.LENGTH_SHORT).show();
                             }
-                            getFollowingInfo(following, followingInfo,  0);
                         }
+                        getFollowingInfo(0);
                     }
 
                 }
@@ -223,14 +224,14 @@ public class HomeFragment extends Fragment {
 
     }
 
-    private void getFollowingInfo(final String[] following, final HashMap<String, Pair<String, String>> followingInfo, final int index) {
+    private void getFollowingInfo(final int index) {
         // get following usernames and profile pics
             DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
 
             Query query = reference
                     .child(getString(R.string.dbname_user_account_settings))
                     .orderByKey()
-                    .equalTo(following[index]);
+                    .equalTo(following.get(index));
             query.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
@@ -250,16 +251,16 @@ public class HomeFragment extends Fragment {
                             String profile_pic = singleSnapshot.child("profile_photo").getValue().toString();
                             Pair<String, String> pair = new Pair<>(username, profile_pic);
 
-                            followingInfo.put(following[index], pair);
+                            followingInfo.put(following.get(index), pair);
                         }
 
                     }
 
-                    if (index < following.length - 1) {
-                        getFollowingInfo(following, followingInfo, index + 1);
+                    if (index < following.size() - 1) {
+                        getFollowingInfo(index + 1);
                     }
                     else {
-                        getPics(following, followingInfo, new ArrayList<Pic>(), 0);
+                        getPics(0);
                     }
 
                 }
@@ -271,14 +272,14 @@ public class HomeFragment extends Fragment {
             });
     }
 
-    private void getPics(final String[] following, final HashMap<String, Pair<String, String>> followingInfo, final ArrayList<Pic> pics, final int index) {
+    private void getPics(final int index) {
 
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
 
         Query query = reference
                 .child(getString(R.string.dbname_user_photos))
                 .orderByKey()
-                .equalTo(following[index]);
+                .equalTo(following.get(index));
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -303,13 +304,13 @@ public class HomeFragment extends Fragment {
                     }
                 }
 
-                if (index < following.length - 1) {
-                    getPics(following, followingInfo, pics, index + 1);
+                if (index < following.size() - 1) {
+                    getPics(index + 1);
                 }
                 else {
                     // done querying
                     Toast.makeText(getActivity(), "ready to display pics", Toast.LENGTH_SHORT).show();
-                    displayPics(followingInfo, pics);
+                    displayPics();
                 }
 
             }
@@ -321,7 +322,7 @@ public class HomeFragment extends Fragment {
         });
     }
 
-    private void displayPics(HashMap<String, Pair<String, String>> followingInfo, ArrayList<Pic> pics) {
+    private void displayPics() {
         // sort the pics chronologically
         if (pics != null) {
             Collections.sort(pics, new Comparator<Pic>() {
@@ -392,6 +393,41 @@ public class HomeFragment extends Fragment {
 
             }
         });
+    }
+
+    private void goToProfile(String username) {
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
+
+        Query query = reference
+                .child(getString(R.string.dbname_users))
+                .orderByChild(getString(R.string.field_username))
+                .equalTo(username);
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                if (!dataSnapshot.exists()) {
+                    // display message that user was not found
+                    Toast.makeText(getActivity(), "User not found.", Toast.LENGTH_SHORT).show();
+                }
+                for (DataSnapshot singleSnapshot : dataSnapshot.getChildren()) {
+                    if (singleSnapshot.exists()) {
+                        Intent i = new Intent(getActivity(), ProfileActivity.class);
+                        String user_id = singleSnapshot.child("user_id").getValue().toString();
+                        i.putExtra("USER_ID", user_id);
+                        startActivity(i);
+                    }
+
+                }
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
     }
 
     private void initImageLoader() {
