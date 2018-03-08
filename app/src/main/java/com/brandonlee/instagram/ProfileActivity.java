@@ -1,18 +1,17 @@
 package com.brandonlee.instagram;
 
-import android.app.FragmentTransaction;
-import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.GridView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.brandonlee.instagram.Database.User;
-import com.brandonlee.instagram.Fragments.HomeFragment;
 import com.brandonlee.instagram.Utils.GridViewImageHelper;
 import com.brandonlee.instagram.Utils.UniversalImageLoader;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -38,6 +37,8 @@ public class ProfileActivity extends AppCompatActivity {
     private CircleImageView mProfilePhoto;
     private GridView mGridView;
 
+    private Button mFollow, mUnfollow;
+
     ArrayList<String> imgUrls = new ArrayList<>();
 
     @Override
@@ -53,8 +54,11 @@ public class ProfileActivity extends AppCompatActivity {
         mFollowing = findViewById(R.id.profile_following);
         mProfilePhoto = findViewById(R.id.profile_image);
         mGridView = findViewById(R.id.gridView);
+        mFollow = findViewById(R.id.btnFollow);
+        mUnfollow = findViewById(R.id.btnUnfollow);
 
         initImageLoader();
+
 
         if (savedInstanceState == null) {
             Bundle extras = getIntent().getExtras();
@@ -73,6 +77,97 @@ public class ProfileActivity extends AppCompatActivity {
         else {
             fillUserInfo();
         }
+        isFollowing();
+
+        mFollow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "onClick: Now Following");
+
+                FirebaseDatabase.getInstance().getReference()
+                        .child("dbname_following")
+                        .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                        .child(user_id)
+                        .child(getString(R.string.field_user_id))
+                        .setValue(user_id);
+
+                FirebaseDatabase.getInstance().getReference()
+                        .child("dbname_followers")
+                        .child(user_id)
+                        .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                        .child(getString(R.string.field_user_id))
+                        .setValue(FirebaseAuth.getInstance().getCurrentUser().getUid());
+
+                setFollowing();
+            }
+        });
+
+        mUnfollow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "onClick: Now Unfollowing");
+
+                FirebaseDatabase.getInstance().getReference()
+                        .child("dbname_following")
+                        .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                        .child(user_id)
+                        .removeValue();
+
+                FirebaseDatabase.getInstance().getReference()
+                        .child("dbname_followers")
+                        .child(user_id)
+                        .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                        .removeValue();
+
+                setUnfollowing();
+            }
+        });
+
+    }
+
+    private void isFollowing() {
+        Log.d(TAG, "isFollowing: Checking if following this user");
+
+        setUnfollowing();
+
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
+        Query query = reference.child("dbname_following")
+                .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                .orderByChild(getString(R.string.field_user_id)).equalTo(user_id);
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for(DataSnapshot singleSnapshot :  dataSnapshot.getChildren()){
+                    Log.d(TAG, "onDataChange: found user:" + singleSnapshot.getValue());
+
+                    setFollowing();
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+    }
+
+    private void setFollowing() {
+        Log.d(TAG, "setFollowing: updating the following");
+
+        mFollow.setVisibility(View.GONE);
+        mUnfollow.setVisibility(View.VISIBLE);
+
+
+    }
+
+    private void setUnfollowing() {
+        Log.d(TAG, "setFollowing: updating the unfollowing");
+
+        mFollow.setVisibility(View.VISIBLE);
+        mUnfollow.setVisibility(View.GONE);
+
+
     }
 
     private void fillUserInfo() {

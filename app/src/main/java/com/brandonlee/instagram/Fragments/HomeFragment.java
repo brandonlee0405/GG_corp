@@ -1,8 +1,6 @@
 package com.brandonlee.instagram.Fragments;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.media.Image;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -19,14 +17,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.brandonlee.instagram.Database.User;
-import com.brandonlee.instagram.Database.UserAccountSettings;
-import com.brandonlee.instagram.Database.UserSettings;
 import com.brandonlee.instagram.ProfileActivity;
 import com.brandonlee.instagram.R;
 import com.brandonlee.instagram.Utils.FirebaseMethods;
 import com.brandonlee.instagram.Utils.UniversalImageLoader;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -36,16 +31,10 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.jar.Attributes;
 
 /**
  * Created by BrandonLee on 2/6/18.
@@ -201,18 +190,20 @@ public class HomeFragment extends Fragment {
                 for (DataSnapshot singleSnapshot : dataSnapshot.getChildren()) {
                     if (singleSnapshot.exists()) {
                         // go to user's profile
-                        User user = singleSnapshot.getValue(User.class);
-                        String string = singleSnapshot.child("following").getValue().toString();
-                        string = string.replace("{", "");
-                        string = string.replace("}", "");
-                        string = string.replace(",", "");
-                        string = string.replace("=1", "");
-                        string = string.replaceAll("[0-9a-zA-Z]+=0", "");
-                        String[] following = string.split("\\s+");
-                        for (int i = 0; i < following.length; i++) {
-                            //Toast.makeText(getActivity(), following[i], Toast.LENGTH_SHORT).show();
+                        if (singleSnapshot.child("following").exists()) {
+                            User user = singleSnapshot.getValue(User.class);
+                            String string = singleSnapshot.child("following").getValue().toString();
+                            string = string.replace("{", "");
+                            string = string.replace("}", "");
+                            string = string.replace(",", "");
+                            string = string.replace("=1", "");
+                            string = string.replaceAll("[0-9a-zA-Z]+=0", "");
+                            String[] following = string.split("\\s+");
+                            for (int i = 0; i < following.length; i++) {
+                                //Toast.makeText(getActivity(), following[i], Toast.LENGTH_SHORT).show();
+                            }
+                            getFollowingInfo(following, followingInfo,  0);
                         }
-                        getFollowingInfo(following, followingInfo,  0);
                     }
 
                 }
