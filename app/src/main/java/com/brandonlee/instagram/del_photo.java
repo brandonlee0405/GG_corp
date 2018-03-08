@@ -77,7 +77,7 @@ public class del_photo extends AppCompatActivity {
             }
         });
 
-        btnDelete.setOnClickListener(new View.OnClickListener() {
+        btnArchive.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (photo_id != null) {
@@ -139,7 +139,7 @@ public class del_photo extends AppCompatActivity {
             }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-
+                Toast.makeText(del_photo.this, "Deletion Failed", Toast.LENGTH_LONG).show();
             }
         });
 
@@ -153,6 +153,11 @@ public class del_photo extends AppCompatActivity {
     }
 
     private void archivePhoto() {
-        database.child("User_Photo").child(user.getUid()).child("").child("archived").setValue("1");
+        database.child("User_Photo").child(user.getUid()).child("archived").setValue("1").addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                Toast.makeText(del_photo.this, "Photo Archived!", Toast.LENGTH_LONG).show();
+            }
+        });
     }
 }
