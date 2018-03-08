@@ -44,6 +44,7 @@
         <activity android:name=".ProfileSettings" />
         <activity android:name=".MainActivity" />
         <activity android:name=".CameraActivity" />
+        <activity android:name=".del_photo"></activity>
 
 
     </application>
