@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.brandonlee.instagram.Database.Photo;
 import com.brandonlee.instagram.Database.User;
@@ -142,7 +143,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         UserAccountSettings settings = userSettings.getSettings();
 
         UniversalImageLoader.setImage(settings.getProfile_photo(), mProfilePhoto, null, "");
-
+        //Toast.makeText(getActivity(), "userid: " + user.getUser_id(), Toast.LENGTH_SHORT).show();
         // Got to do the profile photo
         mFullname.setText(settings.getDisplay_name());
         mDescription.setText(settings.getDescription());
@@ -172,7 +173,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
-
+                Toast.makeText(getActivity(),"userid : " + user.getUid(), Toast.LENGTH_SHORT).show();
                 if (user != null) {
                     // User is signed in
                     Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());

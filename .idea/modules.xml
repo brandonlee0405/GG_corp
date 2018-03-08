@@ -3,7 +3,6 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/GG_corp.iml" filepath="$PROJECT_DIR$/GG_corp.iml" />
-      <module fileurl="file://C:\Users\antho_000\Documents\Android_Studio\GG_corp\Instagram.iml" filepath="C:\Users\antho_000\Documents\Android_Studio\GG_corp\Instagram.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>
